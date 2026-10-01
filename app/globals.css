@@ -78,3 +78,38 @@ img { max-width: 100%; height: auto; }
 @media (min-width: 1280px) {
   :root { --page-padding: 3rem; }
 }
+
+
+@layer components {
+  .kd-label {
+    display: block;
+    margin-bottom: 0.625rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--kd-gray);
+  }
+
+  .kd-input {
+    width: 100%;
+    min-height: 3.5rem;
+    border: 1px solid color-mix(in srgb, var(--kd-black) 15%, transparent);
+    background: var(--kd-white);
+    padding: 0.875rem 1rem;
+    color: var(--kd-black);
+    outline: none;
+    transition:
+      border-color var(--transition-standard),
+      box-shadow var(--transition-standard);
+  }
+
+  .kd-input::placeholder {
+    color: color-mix(in srgb, var(--kd-gray) 70%, transparent);
+  }
+
+  .kd-input:focus {
+    border-color: var(--kd-gold-dark);
+    box-shadow: 0 0 0 1px var(--kd-gold-dark);
+  }
+}
