@@ -16,11 +16,32 @@ const serviceOptions = [
 const consultationOptions = ["Atelier", "Remote"];
 
 export function ConsultationForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);\n  const [submitting, setSubmitting] = useState(false);\n  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/consultations", {
+        method: "POST",
+        body: new FormData(event.currentTarget),
+      });
+
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        setError(result.error ?? "We could not send your request. Please try again.");
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("We could not send your request. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -33,7 +54,7 @@ export function ConsultationForm() {
           Thank you for beginning the conversation.
         </h2>
         <p className="mt-6 max-w-xl text-sm leading-7 text-kd-gray">
-          The consultation interface is ready. Secure submission and client-record creation will be activated when the Supabase data layer is connected in the next milestone.
+          Your consultation request has been received. The KOFFY DODZI team can now review the details you shared and continue the conversation with you.
         </p>
         <button
           type="button"
@@ -143,9 +164,16 @@ export function ConsultationForm() {
       </label>
 
       <div className="border-t border-kd-black/15 pt-8">
-        <Button type="submit">Request consultation</Button>
+        {error ? (
+          <p className="mb-5 max-w-xl border-l-2 border-kd-gold-dark pl-4 text-sm leading-7 text-kd-charcoal" role="alert">
+            {error}
+          </p>
+        ) : null}
+        <Button type="submit" disabled={submitting}>
+          {submitting ? "Sending request…" : "Request consultation"}
+        </Button>
         <p className="mt-4 max-w-lg text-xs leading-6 text-kd-gray">
-          Submitting this development version does not yet send your information. Secure data storage will be connected before launch.
+          Your information is submitted securely to KOFFY DODZI for the purpose of responding to your consultation request.
         </p>
       </div>
     </form>
