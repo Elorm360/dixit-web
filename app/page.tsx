@@ -6,7 +6,7 @@ export default function Home() {
       <section className="kd-container flex min-h-screen flex-col items-center justify-center py-16 text-center">
         <div className="mb-10 overflow-hidden">
           <Image
-            src="/brand/koffy-dodzi-emblem.jpg"
+            src="/brand/dodzi%20logo.jpg"
             alt="KOFFY DODZI emblem"
             width={180}
             height={180}
