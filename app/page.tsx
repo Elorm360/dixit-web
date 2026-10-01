@@ -113,6 +113,38 @@ export default function Home() {
         </Container>
       </section>
 
+      <section className="overflow-hidden bg-kd-black py-24 text-kd-white md:py-36">
+        <Container>
+          <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-24">
+            <div className="relative min-h-[30rem] border border-white/10 p-8 md:min-h-[38rem] md:p-12">
+              <div className="absolute right-8 top-8 font-display text-[8rem] leading-none text-white/[0.035] md:text-[13rem]">KD</div>
+              <p className="relative text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold">
+                The KOFFY DODZI Man
+              </p>
+              <div className="relative mt-32 md:mt-48">
+                <p className="font-display max-w-md text-4xl leading-[1.05] md:text-6xl">
+                  Ambition without noise.
+                  <span className="block italic text-white/45">Presence without excess.</span>
+                </p>
+              </div>
+            </div>
+            <div>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold">A Point of View</p>
+              <h2 className="font-display mt-6 max-w-3xl text-5xl font-medium leading-[0.96] md:text-7xl">
+                He dresses with
+                <span className="block italic text-kd-gold">intention.</span>
+              </h2>
+              <p className="mt-8 max-w-xl text-base leading-8 text-white/55 md:text-lg">
+                Professional, entrepreneurial, culturally grounded, and globally aware. The KOFFY DODZI man values fit, identity, quality, and the confidence of knowing his clothes were considered for him.
+              </p>
+              <Link href="/our-story" className="mt-9 inline-flex border-b border-white/40 pb-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] transition-colors hover:border-kd-gold hover:text-kd-gold">
+                Enter the house
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       <section className="bg-kd-warm-gold py-24 text-kd-black md:py-32">
         <Container className="text-center">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">
