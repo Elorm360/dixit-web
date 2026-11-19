@@ -13,11 +13,13 @@ Use the publishable key from Supabase Project Settings → API Keys. Never put a
 
 ## Database
 
-The migration `supabase/migrations/20261119235900_dixit_consultation_public_insert.sql` was applied to the connected DIXIT Supabase project. It changes the service choices and grants anonymous visitors insert-only access to the listed customer fields. The database default supplies `status = 'new'`; the insert policy enforces it. Existing staff read/update policies remain unchanged.
+The connected DIXIT Supabase project already has the service constraint and anonymous insert-only policy in place. The applied migration history includes `20261119235602_dixit_consultation_services_and_public_insert` and `20261119235620_dixit_consultation_public_insert`. The matching SQL is versioned at `supabase/migrations/20261119235620_dixit_consultation_public_insert.sql`.
+
+The database default supplies `status = 'new'`, and the insert policy enforces it. Anonymous visitors can insert only the customer fields used by the form. They cannot read, update, or delete enquiries. Existing staff read/update policies are unchanged.
 
 ## Local verification
 
-1. Run `npm install` and copy `.env.example` to `.env.local`.
+1. Run `npm ci` and copy `.env.example` to `.env.local`.
 2. Set the real project publishable key in `.env.local`.
 3. Run `npm run dev` and open `/consultation`.
 4. Submit a test enquiry and verify the row appears in Supabase Table Editor.
