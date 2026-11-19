@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+<title id="title">DIXIT monogram</title>
+<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e77a"/><stop offset=".48" stop-color="#d9a928"/><stop offset="1" stop-color="#f5dc68"/></linearGradient></defs>
+<rect width="512" height="512" fill="url(#gold)"/>
+<path d="M176 92h104c91 0 146 62 146 164s-55 164-146 164H176V92zm76 68v192h25c49 0 75-33 75-96s-26-96-75-96h-25z" fill="#080808"/>
+<path d="M132 230h164v43H132z" fill="#080808"/>
+<text x="256" y="475" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="45" letter-spacing="1" fill="#080808">DIXIT</text>
+</svg>
