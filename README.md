@@ -20,20 +20,21 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 - `npm run build` — create a production build
 - `npm run start` — serve the production build
 
-The supplied black-on-gold DIXIT logo is in `public/brand/dixit-logo.png` and is used in the header and as the browser icon. The supplied editorial portrait is in `public/brand/dixit-hero.png` and leads the homepage. The Vercel project is linked; Supabase environment variables are still pending, so enquiries are not saved yet.
+The black-on-gold DIXIT logo is in `public/brand/dixit-logo.png`. The supplied editorial portrait is in `public/brand/dixit-hero.png` and leads the homepage. The Vercel project is linked; Supabase environment variables are still pending, so enquiries and the admin inbox are not connected yet.
 
-## Supabase enquiries
+## Supabase enquiries and admin inbox
 
-The consultation endpoint uses the Supabase project URL and publishable (or legacy anon) key on the server. It never uses a service-role key.
+The public consultation endpoint uses the Supabase project URL and publishable (or legacy anon) key. The private `/admin` inbox uses Supabase Auth and a server-only secret key to read enquiries; access is restricted to verified emails in `ADMIN_EMAILS`.
 
-1. Copy `.env.example` to `.env.local` and fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` from the DIXIT project settings. `.env.local` is ignored by Git.
-2. In the Supabase SQL Editor for the DIXIT project, run [`supabase/migrations/20261106160000_create_consultation_requests.sql`](./supabase/migrations/20261106160000_create_consultation_requests.sql).
-3. Restart the development server and submit a test enquiry. Confirm it appears in the `consultation_requests` table.
+1. Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from the DIXIT project settings. `.env.local` is ignored by Git.
+2. Set `SUPABASE_SECRET_KEY` and `ADMIN_EMAILS` on the server. Keep the secret key out of browser variables and source control. The allowlist must contain the exact email of a confirmed Supabase Auth user.
+3. In the Supabase SQL Editor for the DIXIT project, run [`supabase/migrations/20261106160000_create_consultation_requests.sql`](./supabase/migrations/20261106160000_create_consultation_requests.sql).
+4. Create or invite the admin user in Supabase Auth, confirm its email, then sign in at `/admin`. The inbox displays the latest 100 consultation and made-to-order requests and provides direct email/phone follow-up.
 
-The migration enables row-level security and allows anonymous visitors to insert validated enquiries only; it does not grant public reads or updates. Made-to-order requests use this enquiry flow; they are not confirmed sales or paid orders. Email notifications, automated abuse/rate limiting, product details, delivery/returns terms, and the final privacy notice should be completed before public launch. No real product stock, prices, contact details, or payment options have been invented in the lookbook.
+The migration enables row-level security and allows anonymous visitors to insert validated enquiries only; it does not grant public reads or updates. The admin API verifies the user's access token with Supabase Auth and checks `ADMIN_EMAILS` before using the server-only secret key. Made-to-order requests are not confirmed sales or paid orders. The first admin release is an enquiry inbox, not product editing, inventory, or payment management.
 
 ## Deploy to Vercel
 
-Import this repository into Vercel and keep the detected Next.js framework and default build settings (`npm run build`). Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` as Vercel project environment variables for every environment where enquiries should be accepted. Use the publishable (or legacy anon) key only; never add a service-role or secret key. Apply the migration above to the same Supabase project and submit a test enquiry after deployment. Without these settings, the site can render but the enquiry endpoint returns `503`. The current order flow is a request for the team to confirm manually; no payment gateway or online checkout is configured.
+Keep the detected Next.js framework and default build settings (`npm run build`). Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, and `ADMIN_EMAILS` to the Vercel environments that should accept requests and allow admin access. The secret key must be server-only. Apply the migration above to the same Supabase project and submit a test enquiry after deployment. Without the public Supabase settings, the site can render but the enquiry endpoint returns `503`; `/admin` displays a setup or connection message until all required settings and the migration are in place.
 
-Before announcing the site, replace the draft privacy notice with DIXIT's approved policy and real privacy contact/retention details. Email notifications and abuse/rate limiting are not configured in this release.
+The current order flow is a request for the team to confirm manually; no payment gateway or online checkout is configured. Product details, delivery/returns terms, email notifications, abuse/rate limiting, and the final privacy notice still need to be completed before public launch.

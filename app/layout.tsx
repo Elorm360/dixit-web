@@ -34,9 +34,13 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`${inter.variable} ${cormorant.variable}`}>
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          <div className="site-chrome-header">
+            <SiteHeader />
+          </div>
           <div className="flex-1">{children}</div>
-          <SiteFooter />
+          <div className="site-chrome-footer">
+            <SiteFooter />
+          </div>
         </div>
       </body>
     </html>

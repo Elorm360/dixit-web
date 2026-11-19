@@ -11,7 +11,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-kd-black text-kd-white">
+    <header className="sticky top-0 z-50 border-b border-kd-black/15 bg-kd-gold text-kd-black">
       <Container className="flex h-20 items-center justify-between lg:h-24">
         <Link
           href="/"
@@ -34,7 +34,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/70 transition-colors hover:text-kd-gold"
+              className="text-[0.68rem] font-medium uppercase tracking-[0.18em] text-kd-black/70 transition-colors hover:text-kd-black"
             >
               {item.label}
             </Link>
@@ -42,7 +42,12 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button href={siteConfig.consultationHref}>Book a consultation</Button>
+          <Button
+            href={siteConfig.consultationHref}
+            className="bg-kd-black text-kd-gold hover:bg-kd-charcoal"
+          >
+            Book a consultation
+          </Button>
         </div>
 
         <button
@@ -65,7 +70,7 @@ export function SiteHeader() {
         id="mobile-navigation"
         aria-hidden={!menuOpen}
         inert={!menuOpen}
-        className={`overflow-hidden border-t border-white/10 bg-kd-black transition-[max-height,opacity] duration-300 lg:hidden ${
+        className={`overflow-hidden border-t border-kd-black/15 bg-kd-gold transition-[max-height,opacity] duration-300 lg:hidden ${
           menuOpen ? "max-h-[34rem] opacity-100" : "max-h-0 border-t-transparent opacity-0"
         }`}
       >
@@ -76,7 +81,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="border-b border-white/10 py-4 font-display text-3xl text-white/90 transition-colors hover:text-kd-gold"
+                className="border-b border-kd-black/15 py-4 font-display text-3xl text-kd-black/90 transition-colors hover:text-kd-black"
               >
                 {item.label}
               </Link>
@@ -84,7 +89,7 @@ export function SiteHeader() {
           </nav>
           <Button
             href={siteConfig.consultationHref}
-            className="mt-8 w-full"
+            className="mt-8 w-full bg-kd-black text-kd-gold hover:bg-kd-charcoal"
           >
             Book a consultation
           </Button>

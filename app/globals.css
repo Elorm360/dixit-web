@@ -3,9 +3,9 @@
 :root {
   --kd-black: #0d0d0d;
   --kd-gold: #c9a84c;
-  --kd-gold-dark: #a07830;
-  --kd-cream: #fdfaf3;
-  --kd-warm-gold: #f5edd8;
+  --kd-gold-dark: #70500f;
+  --kd-cream: #fbf8f0;
+  --kd-warm-gold: #ead9aa;
   --kd-charcoal: #2c2c2c;
   --kd-gray: #6b6b6b;
   --kd-white: #ffffff;
@@ -69,6 +69,20 @@ img { max-width: 100%; height: auto; }
 .kd-container {
   width: min(calc(100% - (var(--page-padding) * 2)), var(--container-width));
   margin-inline: auto;
+}
+
+body:has(.admin-shell) .site-chrome-header,
+body:has(.admin-shell) .site-chrome-footer {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @media (min-width: 768px) {
