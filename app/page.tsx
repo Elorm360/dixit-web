@@ -13,14 +13,21 @@ export default function Home() {
   return (
     <main>
       <section className="relative isolate flex min-h-[calc(100svh-5rem)] items-end overflow-hidden bg-kd-black text-kd-white">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_72%_30%,rgba(217,169,40,0.28),transparent_52%),linear-gradient(115deg,#080808_8%,#17130b_56%,#4a3510_100%)]" />
-        <div className="absolute inset-0 -z-10 bg-black/35" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-black/35 to-black/10" />
+        <Image
+          src="/brand/dixit-hero.jpg"
+          alt="DIXIT editorial look: textured gold jacket styled with black tailoring in a dramatic open landscape"
+          fill
+          priority
+          sizes="100vw"
+          className="absolute inset-0 -z-20 object-cover object-[center_35%]"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/35 to-black/10" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
         <Container className="grid min-h-[calc(100svh-5rem)] items-end gap-10 pb-16 pt-24 lg:grid-cols-[1.1fr_0.9fr] lg:pb-24">
           <div className="max-w-4xl">
             <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-kd-gold">A Modern Fashion House</p>
             <h1 className="font-display text-[clamp(4.5rem,11vw,10rem)] font-medium leading-[0.78] tracking-[-0.05em]">Style is a <span className="block italic text-kd-gold">statement.</span></h1>
-            <p className="mt-9 max-w-xl text-base leading-8 text-white/75 md:text-lg">Bespoke craft. Ready-to-wear expression. A wardrobe shaped around individuality.</p>
+            <p className="mt-9 max-w-xl text-base leading-8 text-white/85 md:text-lg">Bespoke craft. Ready-to-wear expression. A wardrobe shaped around individuality.</p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Button href="/collections">Explore collections</Button>
               <Button href="/our-story" variant="outline">Discover DIXIT</Button>
@@ -33,7 +40,7 @@ export default function Home() {
             </div>
           </div>
         </Container>
-        <div className="absolute bottom-7 right-8 hidden text-[0.6rem] uppercase tracking-[0.3em] text-white/45 md:block">Accra · Beyond</div>
+        <div className="absolute bottom-7 right-8 hidden text-[0.6rem] uppercase tracking-[0.3em] text-white/75 md:block">Accra · Beyond</div>
       </section>
 
       <section className="bg-kd-cream py-24 text-kd-black md:py-36">
