@@ -10,8 +10,8 @@ export default function Home() {
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_70%_30%,rgba(201,168,76,0.12),transparent_35%)]" />
         <div className="absolute inset-y-0 right-0 -z-10 hidden w-[44%] border-l border-white/10 lg:block" />
 
-        <Container className="grid gap-16 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
-          <div className="max-w-4xl">
+        <Container className="relative z-10 grid gap-16 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
+          <div className="relative z-10 max-w-4xl">
             <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-kd-gold">
               African Luxury Menswear
             </p>
@@ -31,22 +31,29 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto flex w-full max-w-md items-center justify-center lg:max-w-none">
-            <div className="absolute h-[80%] w-[80%] border border-kd-gold/25" />
-            <div className="relative m-8 aspect-[4/5] w-full overflow-hidden bg-kd-gold">
-              <Image
-                src="/brand/dodzi%20logo.jpg"
-                alt="KOFFY DODZI house emblem"
-                fill
-                priority
-                sizes="(max-width: 1024px) 80vw, 36vw"
-                className="object-cover"
-              />
+          <div className="absolute inset-0 z-0 overflow-hidden bg-kd-charcoal lg:relative lg:inset-auto lg:z-10 lg:m-8 lg:aspect-[2/3] lg:w-full">
+            <Image
+              src="/brand/dixit-hero.png"
+              alt="A man wearing a textured gold jacket against a dramatic mountain landscape"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 36vw"
+              className="object-cover object-[center_10%]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-kd-black/85 via-kd-black/55 to-kd-black/20 lg:bg-gradient-to-t lg:from-kd-black/70 lg:via-transparent lg:to-kd-black/10" />
+            <div className="absolute inset-x-0 bottom-0 hidden items-end justify-between gap-4 p-6 lg:flex lg:p-8">
+              <p className="font-display max-w-xs text-2xl leading-tight text-white sm:text-3xl">
+                A point of view,
+                <span className="block italic text-kd-gold">worn with presence.</span>
+              </p>
+              <span className="pb-1 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-white/75">
+                DIXIT
+              </span>
             </div>
           </div>
         </Container>
 
-        <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-[0.6rem] uppercase tracking-[0.3em] text-white/35 md:block">
+        <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-[0.6rem] uppercase tracking-[0.3em] text-white/35 lg:block">
           Accra · Ghana
         </div>
       </section>
@@ -66,7 +73,7 @@ export default function Home() {
               </span>
             </h2>
             <p className="mt-8 max-w-2xl text-base leading-8 text-kd-gray md:text-lg">
-              KOFFY DODZI brings together African identity, master craftsmanship,
+              DIXIT brings together African identity, master craftsmanship,
               and a global design language to create clothing with presence and
               purpose.
             </p>
@@ -117,9 +124,8 @@ export default function Home() {
         <Container>
           <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-24">
             <div className="relative min-h-[30rem] border border-white/10 p-8 md:min-h-[38rem] md:p-12">
-              <div className="absolute right-8 top-8 font-display text-[8rem] leading-none text-white/[0.035] md:text-[13rem]">KD</div>
               <p className="relative text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold">
-                The KOFFY DODZI Man
+                The DIXIT Man
               </p>
               <div className="relative mt-32 md:mt-48">
                 <p className="font-display max-w-md text-4xl leading-[1.05] md:text-6xl">
@@ -135,7 +141,7 @@ export default function Home() {
                 <span className="block italic text-kd-gold">intention.</span>
               </h2>
               <p className="mt-8 max-w-xl text-base leading-8 text-white/55 md:text-lg">
-                Professional, entrepreneurial, culturally grounded, and globally aware. The KOFFY DODZI man values fit, identity, quality, and the confidence of knowing his clothes were considered for him.
+                Professional, entrepreneurial, culturally grounded, and globally aware. The DIXIT man values fit, identity, quality, and the confidence of knowing his clothes were considered for him.
               </p>
               <Link href="/our-story" className="mt-9 inline-flex border-b border-white/40 pb-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] transition-colors hover:border-kd-gold hover:text-kd-gold">
                 Enter the house

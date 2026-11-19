@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DIXIT
 
-## Getting Started
+The website for DIXIT, an African luxury menswear house rooted in Accra. The first release is a made-to-order lookbook with manual order requests and a separate bespoke consultation path. It does not offer a cart or take online payments.
 
-First, run the development server:
+## Getting started
+
+Install dependencies and run the local development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` — start the development server
+- `npm run lint` — run ESLint
+- `npm run build` — create a production build
+- `npm run start` — serve the production build
 
-## Learn More
+The supplied black-on-gold DIXIT logo is in `public/brand/dixit-logo.png` and is used in the header and as the browser icon. The supplied editorial portrait is in `public/brand/dixit-hero.png` and leads the homepage. The Vercel project is linked; Supabase environment variables are still pending, so enquiries are not saved yet.
 
-To learn more about Next.js, take a look at the following resources:
+## Supabase enquiries
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The consultation endpoint uses the Supabase project URL and publishable (or legacy anon) key on the server. It never uses a service-role key.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Copy `.env.example` to `.env.local` and fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` from the DIXIT project settings. `.env.local` is ignored by Git.
+2. In the Supabase SQL Editor for the DIXIT project, run [`supabase/migrations/20261106160000_create_consultation_requests.sql`](./supabase/migrations/20261106160000_create_consultation_requests.sql).
+3. Restart the development server and submit a test enquiry. Confirm it appears in the `consultation_requests` table.
 
-## Deploy on Vercel
+The migration enables row-level security and allows anonymous visitors to insert validated enquiries only; it does not grant public reads or updates. Made-to-order requests use this enquiry flow; they are not confirmed sales or paid orders. Email notifications, automated abuse/rate limiting, product details, delivery/returns terms, and the final privacy notice should be completed before public launch. No real product stock, prices, contact details, or payment options have been invented in the lookbook.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy to Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Import this repository into Vercel and keep the detected Next.js framework and default build settings (`npm run build`). Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` as Vercel project environment variables for every environment where enquiries should be accepted. Use the publishable (or legacy anon) key only; never add a service-role or secret key. Apply the migration above to the same Supabase project and submit a test enquiry after deployment. Without these settings, the site can render but the enquiry endpoint returns `503`. The current order flow is a request for the team to confirm manually; no payment gateway or online checkout is configured.
+
+Before announcing the site, replace the draft privacy notice with DIXIT's approved policy and real privacy contact/retention details. Email notifications and abuse/rate limiting are not configured in this release.

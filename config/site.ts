@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "KOFFY DODZI",
+  name: "DIXIT",
   description:
     "African luxury menswear shaped by precision tailoring, premium textiles, and personal client care.",
   navigation: [

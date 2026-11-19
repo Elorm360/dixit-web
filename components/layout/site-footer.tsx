@@ -24,7 +24,7 @@ export function SiteFooter() {
         <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
           <div>
             <Link href="/" className="font-display text-3xl font-semibold tracking-[0.08em]">
-              KOFFY DODZI
+              {siteConfig.name}
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-7 text-white/55">
               Born in Accra. Built for the world.
@@ -53,7 +53,12 @@ export function SiteFooter() {
         </div>
 
         <div className="border-t border-white/10 pt-6 text-[0.68rem] uppercase tracking-[0.14em] text-white/35">
-          © {new Date().getFullYear()} KOFFY DODZI. All rights reserved.
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+            <Link href="/privacy" className="transition-colors hover:text-kd-gold">
+              Privacy notice
+            </Link>
+          </div>
         </div>
       </Container>
     </footer>

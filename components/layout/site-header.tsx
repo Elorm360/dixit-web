@@ -16,19 +16,17 @@ export function SiteHeader() {
         <Link
           href="/"
           className="flex items-center gap-3"
-          aria-label="KOFFY DODZI home"
+          aria-label={`${siteConfig.name} home`}
           onClick={() => setMenuOpen(false)}
         >
           <Image
-            src="/brand/dodzi%20logo.jpg"
-            alt=""
-            width={44}
-            height={44}
-            className="h-11 w-11 object-cover"
+            src="/brand/dixit-logo.png"
+            alt="DIXIT"
+            width={908}
+            height={768}
+            priority
+            className="h-14 w-[66px] object-contain"
           />
-          <span className="font-display text-xl font-semibold tracking-[0.08em] sm:text-2xl">
-            KOFFY DODZI
-          </span>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
@@ -65,6 +63,8 @@ export function SiteHeader() {
 
       <div
         id="mobile-navigation"
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
         className={`overflow-hidden border-t border-white/10 bg-kd-black transition-[max-height,opacity] duration-300 lg:hidden ${
           menuOpen ? "max-h-[34rem] opacity-100" : "max-h-0 border-t-transparent opacity-0"
         }`}

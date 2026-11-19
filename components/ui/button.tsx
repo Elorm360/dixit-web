@@ -18,7 +18,8 @@ type NativeButtonProps = SharedProps &
   };
 
 export function Button(props: LinkButtonProps | NativeButtonProps) {
-  const { children, className = "", variant = "gold" } = props;
+  const { children, className = "", variant = "gold", href, ...buttonProps } =
+    props;
   const styles = {
     gold: "bg-kd-gold text-kd-black hover:bg-kd-warm-gold",
     light: "bg-kd-cream text-kd-black hover:bg-kd-white",
@@ -33,16 +34,13 @@ export function Button(props: LinkButtonProps | NativeButtonProps) {
     className,
   ].join(" ");
 
-  if ("href" in props && props.href) {
+  if (href) {
     return (
-      <Link href={props.href} className={classes}>
+      <Link href={href} className={classes}>
         {children}
       </Link>
     );
   }
-
-  const { variant: _variant, className: _className, ...buttonProps } =
-    props as NativeButtonProps;
 
   return (
     <button className={classes} {...buttonProps}>

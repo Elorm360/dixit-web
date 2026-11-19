@@ -5,7 +5,7 @@ import { SectionIntro } from "@/components/ui/section-intro";
 export const metadata = {
   title: "Bespoke",
   description:
-    "Explore the KOFFY DODZI bespoke menswear experience, from consultation and silhouette to craftsmanship, fitting, and client care.",
+    "Explore the DIXIT bespoke menswear experience, from consultation and silhouette to craftsmanship, fitting, and client care.",
 };
 
 const steps = [
@@ -31,7 +31,7 @@ export default function BespokePage() {
           </h1>
           <div className="mt-12 grid gap-8 border-t border-white/15 pt-8 md:grid-cols-2">
             <p className="max-w-lg text-base leading-8 text-white/60 md:text-lg">
-              KOFFY DODZI approaches bespoke as a personal relationship, not a transaction — combining silhouette-specific fit, premium textiles, and attentive client care.
+              DIXIT approaches bespoke as a personal relationship, not a transaction — combining silhouette-specific fit, premium textiles, and attentive client care.
             </p>
             <div className="md:justify-self-end">
               <Button href="/consultation">Begin your consultation</Button>

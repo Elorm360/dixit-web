@@ -6,7 +6,7 @@ import { SectionIntro } from "@/components/ui/section-intro";
 export const metadata = {
   title: "Our Story",
   description:
-    "Discover the story and values behind KOFFY DODZI, an African luxury menswear house born in Accra.",
+    "Discover the story and values behind DIXIT, an African luxury menswear house born in Accra.",
 };
 
 const values = [
@@ -31,7 +31,7 @@ export default function OurStoryPage() {
                 <span className="block italic text-kd-gold-dark">Built for the world.</span>
               </h1>
               <p className="mt-10 max-w-2xl text-base leading-8 text-kd-gray md:text-lg">
-                KOFFY DODZI was built on a simple conviction: African men deserve clothing that fits not only in size, but in spirit.
+                DIXIT was built on a simple conviction: African men deserve clothing that fits not only in size, but in spirit.
               </p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function OurStoryPage() {
               The house brings together local artisan excellence and a modern global design language, creating menswear for ambitious men who care about identity, presence, and quality.
             </p>
             <p>
-              Rather than treating tailoring as a transaction, KOFFY DODZI is designed around relationships — understanding the client, engineering the right silhouette, and staying attentive long after the first fitting.
+              Rather than treating tailoring as a transaction, DIXIT is designed around relationships — understanding the client, engineering the right silhouette, and staying attentive long after the first fitting.
             </p>
             <div className="border-l border-kd-gold pl-7 font-display text-3xl leading-tight text-white md:text-4xl">
               African Luxury. Tailored to You.
