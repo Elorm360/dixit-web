@@ -1,11 +1,10 @@
 export const siteConfig = {
-  name: "KOFFY DODZI",
-  description:
-    "African luxury menswear shaped by precision tailoring, premium textiles, and personal client care.",
+  name: "DIXIT",
+  description: "A modern fashion house for considered style, individual expression, and exceptional craft.",
   navigation: [
     { label: "Collections", href: "/collections" },
     { label: "Bespoke", href: "/bespoke" },
-    { label: "Our Story", href: "/our-story" },
+    { label: "The House", href: "/our-story" },
     { label: "Journal", href: "/journal" },
     { label: "Contact", href: "/contact" },
   ],
