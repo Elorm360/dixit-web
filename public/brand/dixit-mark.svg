@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-<title id="title">DIXIT monogram</title>
-<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e77a"/><stop offset=".48" stop-color="#d9a928"/><stop offset="1" stop-color="#f5dc68"/></linearGradient></defs>
-<rect width="512" height="512" fill="url(#gold)"/>
-<path d="M176 92h104c91 0 146 62 146 164s-55 164-146 164H176V92zm76 68v192h25c49 0 75-33 75-96s-26-96-75-96h-25z" fill="#080808"/>
-<path d="M132 230h164v43H132z" fill="#080808"/>
-<text x="256" y="475" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="45" letter-spacing="1" fill="#080808">DIXIT</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 523 441" role="img" aria-labelledby="title">
+<title id="title">DIXIT black monogram on gold</title>
+<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d5a51c"/><stop offset=".5" stop-color="#f8e36b"/><stop offset="1" stop-color="#d5a51c"/></linearGradient></defs>
+<rect width="523" height="441" fill="url(#gold)"/>
+<path d="M187 86h64c67 0 108 43 108 105v1c0 62-41 105-108 105h-64V86zm32 30v151h31c49 0 77-29 77-75v-1c0-46-28-75-77-75h-31z" fill="#050505"/>
+<path d="M160 177h111v31H160z" fill="#050505"/>
+<text x="262" y="354" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="49" font-weight="400" letter-spacing="-1" fill="#050505">DIXIT</text>
 </svg>
