@@ -1,23 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --kd-black: #0d0d0d;
-  --kd-gold: #c9a84c;
-  --kd-gold-dark: #a07830;
-  --kd-cream: #fdfaf3;
-  --kd-warm-gold: #f5edd8;
-  --kd-charcoal: #2c2c2c;
-  --kd-gray: #6b6b6b;
+  --kd-black: #080808;
+  --kd-gold: #d9a928;
+  --kd-gold-dark: #9a7015;
+  --kd-cream: #f7f5f0;
+  --kd-warm-gold: #f4e9c9;
+  --kd-charcoal: #211d16;
+  --kd-gray: #6d685f;
   --kd-white: #ffffff;
-
   --background: var(--kd-cream);
   --foreground: var(--kd-black);
   --muted: var(--kd-gray);
   --accent: var(--kd-gold);
-
   --page-padding: 1.25rem;
   --container-width: 90rem;
-
   --transition-fast: 180ms;
   --transition-standard: 300ms;
   --transition-slow: 600ms;
@@ -39,12 +36,7 @@
 }
 
 * { box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-  background: var(--background);
-}
-
+html { scroll-behavior: smooth; background: var(--background); }
 body {
   margin: 0;
   background: var(--background);
@@ -53,32 +45,18 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 img { max-width: 100%; height: auto; }
-
-::selection {
-  background: var(--kd-gold);
-  color: var(--kd-black);
-}
-
+::selection { background: var(--kd-gold); color: var(--kd-black); }
 .font-display { font-family: var(--font-display), serif; }
-
 .kd-container {
   width: min(calc(100% - (var(--page-padding) * 2)), var(--container-width));
   margin-inline: auto;
 }
-
-@media (min-width: 768px) {
-  :root { --page-padding: 2rem; }
-}
-
-@media (min-width: 1280px) {
-  :root { --page-padding: 3rem; }
-}
-
+@media (min-width: 768px) { :root { --page-padding: 2rem; } }
+@media (min-width: 1280px) { :root { --page-padding: 3rem; } }
 
 @layer components {
   .kd-label {
@@ -90,7 +68,6 @@ img { max-width: 100%; height: auto; }
     text-transform: uppercase;
     color: var(--kd-gray);
   }
-
   .kd-input {
     width: 100%;
     min-height: 3.5rem;
@@ -99,15 +76,9 @@ img { max-width: 100%; height: auto; }
     padding: 0.875rem 1rem;
     color: var(--kd-black);
     outline: none;
-    transition:
-      border-color var(--transition-standard),
-      box-shadow var(--transition-standard);
+    transition: border-color var(--transition-standard), box-shadow var(--transition-standard);
   }
-
-  .kd-input::placeholder {
-    color: color-mix(in srgb, var(--kd-gray) 70%, transparent);
-  }
-
+  .kd-input::placeholder { color: color-mix(in srgb, var(--kd-gray) 70%, transparent); }
   .kd-input:focus {
     border-color: var(--kd-gold-dark);
     box-shadow: 0 0 0 1px var(--kd-gold-dark);

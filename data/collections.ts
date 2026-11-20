@@ -1,39 +1,39 @@
 export const collectionCategories = [
   {
-    slug: "bespoke",
-    name: "Bespoke",
+    slug: "womenswear",
+    name: "Womenswear",
     number: "01",
-    description: "Individual garments shaped through consultation, silhouette, fabric, and precision tailoring.",
+    description: "Distinctive silhouettes and considered pieces shaped for modern expression.",
+  },
+  {
+    slug: "menswear",
+    name: "Menswear",
+    number: "02",
+    description: "Confident wardrobe essentials, refined tailoring, and contemporary forms.",
   },
   {
     slug: "signature",
     name: "Signature Collections",
-    number: "02",
-    description: "Distinct KOFFY DODZI expressions developed around the house's evolving design language.",
-  },
-  {
-    slug: "suits",
-    name: "Suits",
     number: "03",
-    description: "Tailored suiting considered around proportion, presence, occasion, and personal style.",
+    description: "The evolving DIXIT point of view, expressed through curated seasonal edits.",
   },
   {
-    slug: "traditional-fusion",
-    name: "Traditional / Fusion",
+    slug: "bespoke",
+    name: "Bespoke",
     number: "04",
-    description: "Contemporary menswear that creates space for African identity within a modern wardrobe.",
+    description: "Individual garments developed around your proportions, preferences, and occasion.",
   },
   {
-    slug: "smart-casual",
-    name: "Smart Casual",
+    slug: "ready-to-wear",
+    name: "Ready to Wear",
     number: "05",
-    description: "Refined wardrobe pieces for a more relaxed expression of the KOFFY DODZI man.",
+    description: "Considered pieces designed to move effortlessly from everyday to occasion.",
   },
   {
     slug: "occasion-wear",
     name: "Occasion Wear",
     number: "06",
-    description: "Considered dressing for weddings, ceremonies, celebrations, and significant moments.",
+    description: "Distinctive dressing for celebrations, ceremonies, and significant moments.",
   },
 ] as const;
 
