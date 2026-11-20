@@ -22,21 +22,26 @@ create table if not exists public.pieces (
 
 alter table public.pieces enable row level security;
 
+-- Separate policies: anon may not execute is_staff().
 drop policy if exists "Public can read published pieces" on public.pieces;
 create policy "Public can read published pieces" on public.pieces
-  for select to anon, authenticated using (published or public.is_staff());
+  for select to anon using (published);
+
+drop policy if exists "Signed-in users can read published pieces, staff all" on public.pieces;
+create policy "Signed-in users can read published pieces, staff all" on public.pieces
+  for select to authenticated using (published or (select public.is_staff()));
 
 drop policy if exists "Staff can insert pieces" on public.pieces;
 create policy "Staff can insert pieces" on public.pieces
-  for insert to authenticated with check (public.is_staff());
+  for insert to authenticated with check ((select public.is_staff()));
 
 drop policy if exists "Staff can update pieces" on public.pieces;
 create policy "Staff can update pieces" on public.pieces
-  for update to authenticated using (public.is_staff()) with check (public.is_staff());
+  for update to authenticated using ((select public.is_staff())) with check ((select public.is_staff()));
 
 drop policy if exists "Staff can delete pieces" on public.pieces;
 create policy "Staff can delete pieces" on public.pieces
-  for delete to authenticated using (public.is_staff());
+  for delete to authenticated using ((select public.is_staff()));
 
 grant select on public.pieces to anon;
 grant select, insert, update, delete on public.pieces to authenticated;
@@ -49,18 +54,18 @@ on conflict (id) do nothing;
 -- Storage needs read access to remove files (public URLs work without it).
 drop policy if exists "Staff can list piece photos" on storage.objects;
 create policy "Staff can list piece photos" on storage.objects
-  for select to authenticated using (bucket_id = 'pieces' and public.is_staff());
+  for select to authenticated using (bucket_id = 'pieces' and (select public.is_staff()));
 
 drop policy if exists "Staff can upload piece photos" on storage.objects;
 create policy "Staff can upload piece photos" on storage.objects
-  for insert to authenticated with check (bucket_id = 'pieces' and public.is_staff());
+  for insert to authenticated with check (bucket_id = 'pieces' and (select public.is_staff()));
 
 drop policy if exists "Staff can update piece photos" on storage.objects;
 create policy "Staff can update piece photos" on storage.objects
-  for update to authenticated using (bucket_id = 'pieces' and public.is_staff());
+  for update to authenticated using (bucket_id = 'pieces' and (select public.is_staff()));
 
 drop policy if exists "Staff can delete piece photos" on storage.objects;
 create policy "Staff can delete piece photos" on storage.objects
-  for delete to authenticated using (bucket_id = 'pieces' and public.is_staff());
+  for delete to authenticated using (bucket_id = 'pieces' and (select public.is_staff()));
 
 commit;

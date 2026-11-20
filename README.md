@@ -40,17 +40,17 @@ After sending, the client gets a **"Continue on WhatsApp"** button with their de
 
 Staff sign in at **/admin** to:
 
-- **Enquiries** — see every consultation request, filter/search, set a status (New → Contacted → Consultation booked → In progress → Completed / Closed), keep private notes, and reply in one tap by WhatsApp, email or phone. Export to CSV.
+- **Enquiries** — see every consultation request, filter/search, set a status (New → Contacted → Consultation booked → In progress → Completed / Archived), keep private notes, and reply in one tap by WhatsApp, email or phone. Export to CSV.
 - **Pieces** — upload photos, set names, descriptions and prices, reorder, publish/hide and delete. Changes appear on the website within seconds, no deploy needed. (Pieces in the photo folders still work and are listed read-only.)
 - **Overview** — new enquiries, this week's count, active clients and upcoming consultation dates.
 
 ### Setup (once)
-1. Apply the migrations in `supabase/migrations/` to the Supabase project (`npx supabase link` then `npx supabase db push`, or paste each file into the SQL editor in order).
+1. Migrations in `supabase/migrations/` are already applied to the production project. For new ones: `npx supabase link` then `npx supabase db push`.
 2. In Supabase → **Authentication → Users**, add a user (email + password) for each staff member.
 3. Grant them dashboard access in the SQL editor:
    ```sql
-   insert into public.staff (user_id, name)
-   select id, 'Their Name' from auth.users where email = 'person@example.com';
+   insert into private.staff_members (user_id, email)
+   select id, email from auth.users where email = 'person@example.com';
    ```
 4. Make sure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` are set in Vercel.
 
