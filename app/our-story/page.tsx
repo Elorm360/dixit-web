@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { founder } from "@/data/founder";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { SectionIntro } from "@/components/ui/section-intro";
@@ -42,6 +44,26 @@ export default function OurStoryPage() {
           </div>
         </Container>
       </section>
+
+      {founder.story.length > 0 && (
+        <section className="bg-kd-warm-gold py-24 text-kd-black md:py-36">
+          <Container className={`grid gap-14 ${founder.photo ? "lg:grid-cols-[0.8fr_1.2fr]" : ""} lg:gap-24`}>
+            {founder.photo && (
+              <div className="relative aspect-[4/5] bg-kd-cream">
+                <Image src={founder.photo} alt={founder.name} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
+              </div>
+            )}
+            <div className="lg:self-center">
+              <SectionIntro eyebrow="The Founder" title={<>{founder.name}</>} />
+              <p className="mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">{founder.role}</p>
+              <div className="mt-10 max-w-2xl space-y-6 text-base leading-8 text-kd-charcoal/80 md:text-lg">
+                {founder.story.map((p) => <p key={p}>{p}</p>)}
+              </div>
+              {founder.quote && <blockquote className="mt-10 border-l border-kd-gold-dark pl-7 font-display text-3xl italic leading-tight md:text-4xl">“{founder.quote}”</blockquote>}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <section className="bg-kd-cream py-24 md:py-36">
         <Container>

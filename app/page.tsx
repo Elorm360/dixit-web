@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { formatPrice } from "@/config/site";
+import { getAllPieces } from "@/lib/pieces";
 
 const pillars = [
   ["01", "Bespoke", "Personal pieces shaped around your proportions, preferences, and occasion."],
@@ -10,37 +12,44 @@ const pillars = [
 ];
 
 export default function Home() {
+  const featured = getAllPieces().slice(0, 3);
   return (
     <main>
       <section className="relative isolate flex min-h-[calc(100svh-5rem)] items-end overflow-hidden bg-kd-black text-kd-white">
+        {/* Phones: photo fills the screen, anchored to the top so the face stays visible. */}
+        {/* Tablet/desktop: blurred copy fills the screen; the full portrait sits on the right, uncropped. */}
         <Image
           src="/brand/dixit-hero.jpg"
-          alt="DIXIT editorial look: textured gold jacket styled with black tailoring in a dramatic open landscape"
+          alt=""
           fill
           priority
           sizes="100vw"
-          className="absolute inset-0 -z-20 object-cover object-[center_35%]"
+          className="absolute inset-0 -z-30 object-cover md:scale-110 object-top md:object-center md:blur-2xl md:brightness-50"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/35 to-black/10" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
-        <Container className="grid min-h-[calc(100svh-5rem)] items-end gap-10 pb-16 pt-24 lg:grid-cols-[1.1fr_0.9fr] lg:pb-24">
+        <div className="absolute inset-y-0 right-0 -z-20 hidden aspect-[583/904] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] md:block lg:right-[6%]">
+          <Image
+            src="/brand/dixit-hero.jpg"
+            alt="DIXIT editorial look: textured gold jacket styled with black tailoring in a dramatic open landscape"
+            fill
+            priority
+            sizes="(min-width: 768px) 60vh, 100vw"
+            className="object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+        <Container className="grid min-h-[calc(100svh-5rem)] items-end gap-10 pb-16 pt-24 lg:grid-cols-2 lg:pb-24">
           <div className="max-w-4xl">
             <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-kd-gold">A Modern Fashion House</p>
-            <h1 className="font-display text-[clamp(4.5rem,11vw,10rem)] font-medium leading-[0.78] tracking-[-0.05em]">Style is a <span className="block italic text-kd-gold">statement.</span></h1>
+            <h1 className="font-display text-[clamp(3.75rem,9vw,8.5rem)] font-medium leading-[0.78] tracking-[-0.05em]">Style is a <span className="block italic text-kd-gold">statement.</span></h1>
             <p className="mt-9 max-w-xl text-base leading-8 text-white/85 md:text-lg">Bespoke craft. Ready-to-wear expression. A wardrobe shaped around individuality.</p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Button href="/collections">Explore collections</Button>
               <Button href="/our-story" variant="outline">Discover DIXIT</Button>
             </div>
           </div>
-          <div className="hidden items-end justify-end lg:flex">
-            <div className="relative w-64 border border-kd-gold/50 bg-black/30 p-7 backdrop-blur-sm">
-              <Image src="/brand/dixit-mark.svg" alt="DIXIT monogram" width={180} height={180} className="mx-auto h-auto w-full" />
-              <p className="mt-4 text-center text-[0.58rem] uppercase tracking-[0.3em] text-kd-gold">Designed with intention</p>
-            </div>
-          </div>
         </Container>
-        <div className="absolute bottom-7 right-8 hidden text-[0.6rem] uppercase tracking-[0.3em] text-white/75 md:block">Accra · Beyond</div>
+        <div className="absolute right-8 top-7 hidden text-[0.6rem] uppercase tracking-[0.3em] text-white/75 md:block">Accra · Beyond</div>
       </section>
 
       <section className="bg-kd-cream py-24 text-kd-black md:py-36">
@@ -86,6 +95,25 @@ export default function Home() {
             <Button href="/collections" className="mt-8">View the collections</Button>
           </div>
         </Container>
+        {featured.length > 0 && (
+          <Container className="mt-16 md:mt-24">
+            <ul className="grid gap-6 sm:grid-cols-3">
+              {featured.map((piece) => (
+                <li key={`${piece.collection}/${piece.slug}`}>
+                  <Link href={`/collections/${piece.collection}/${piece.slug}`} className="group block">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-kd-charcoal">
+                      <Image src={piece.images[0]} alt={piece.name} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]" />
+                    </div>
+                    <div className="mt-4 flex items-baseline justify-between gap-4">
+                      <span className="font-display text-2xl">{piece.name}</span>
+                      <span className="text-xs uppercase tracking-[0.14em] text-white/50">{formatPrice(piece.price)}</span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        )}
       </section>
 
       <section className="bg-kd-warm-gold py-24 text-kd-black md:py-32">

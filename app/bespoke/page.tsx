@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { SectionIntro } from "@/components/ui/section-intro";
+import { formatPrice, pricing } from "@/config/site";
 
 export const metadata = {
   title: "Bespoke",
@@ -16,6 +17,14 @@ const steps = [
   ["06", "Fitting", "The piece is assessed and refined where necessary before completion."],
   ["07", "Delivery", "The completed garment is prepared with the agreed details and timing in focus."],
   ["08", "Client Care", "The relationship continues beyond delivery through attentive follow-up and future wardrobe needs."],
+];
+
+const faqs = [
+  ["How do I begin?", "Send an enquiry or message us on WhatsApp. We will arrange a consultation at the atelier or remotely to understand the occasion, your style and your timing."],
+  ["Can I have a piece made if I am outside Ghana?", "Yes. Remote consultations are available, and we will guide you through taking measurements and confirming details from wherever you are."],
+  ["How is pricing decided?", "Every bespoke piece is quoted individually, based on the design, fabric and level of handwork involved. You receive a clear quote before anything begins."],
+  ["Can I bring my own fabric or reference images?", "Of course. Share images, sketches or fabric with us during your consultation and we will advise on what will work best."],
+  ["What if the fit needs adjusting?", "Fittings are part of the process. The garment is refined until it fits as it should before it is delivered."],
 ];
 
 export default function BespokePage() {
@@ -42,6 +51,31 @@ export default function BespokePage() {
                 <p className="max-w-xl text-sm leading-7 text-kd-gray md:text-base">{copy}</p>
               </article>
             ))}
+          </div>
+        </Container>
+      </section>
+      <section className="bg-kd-warm-gold py-24 text-kd-black md:py-32">
+        <Container className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+          <div>
+            <SectionIntro eyebrow="Investment & Timing" title={<>Clear from <span className="italic text-kd-gold-dark">the start.</span></>} />
+            <dl className="mt-10 grid gap-6 border-t border-kd-black/15 pt-8 sm:grid-cols-2">
+              <div><dt className="kd-label">Bespoke pieces</dt><dd className="font-display text-3xl">{pricing.bespokeStartingFrom != null ? `From ${formatPrice(pricing.bespokeStartingFrom)}` : "Quoted individually"}</dd></div>
+              <div><dt className="kd-label">Typical timing</dt><dd className="font-display text-3xl">{pricing.bespokeLeadTime || "Confirmed at consultation"}</dd></div>
+            </dl>
+            <p className="mt-6 max-w-md text-sm leading-7 text-kd-charcoal/70">For events, get in touch as early as you can so there is time for fittings.</p>
+          </div>
+          <div>
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">Questions</p>
+            <div className="mt-6 border-t border-kd-black/15">
+              {faqs.map(([q, a]) => (
+                <details key={q} className="group border-b border-kd-black/15 py-6">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-2xl md:text-3xl">
+                    {q}<span className="text-xl transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                  </summary>
+                  <p className="mt-4 max-w-xl text-sm leading-7 text-kd-charcoal/75">{a}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </Container>
       </section>

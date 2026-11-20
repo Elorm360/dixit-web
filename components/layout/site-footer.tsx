@@ -1,21 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/config/site";
-import { Button } from "@/components/ui/button";
+import { contact, siteConfig, whatsappLink } from "@/config/site";
 import { Container } from "@/components/ui/container";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-kd-black text-kd-white">
-      <Container className="py-16 md:py-20">
-        <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-[1.3fr_1fr] md:items-end">
-          <div>
-            <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold">A Modern Fashion House</p>
-            <h2 className="font-display max-w-2xl text-4xl font-medium leading-none md:text-6xl">Individual style. Considered by design.</h2>
-          </div>
-          <div className="md:justify-self-end"><Button href={siteConfig.consultationHref}>Start a conversation</Button></div>
-        </div>
-
+    <footer className="border-t border-white/10 bg-kd-black text-kd-white">
+      <Container className="pb-10 pt-4 md:pt-8">
         <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
           <div>
             <Link href="/" className="inline-flex items-center gap-3">
@@ -31,8 +22,14 @@ export function SiteFooter() {
             </nav>
           </div>
           <div>
-            <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/40">Location</p>
-            <p className="text-sm leading-7 text-white/65">Accra, Ghana</p>
+            <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/40">Contact</p>
+            <div className="flex flex-col gap-3 text-sm text-white/65">
+              <span>{contact.city}</span>
+              {whatsappLink() && <a href={whatsappLink()!} target="_blank" rel="noopener noreferrer" className="hover:text-kd-gold">WhatsApp</a>}
+              {contact.email && <a href={`mailto:${contact.email}`} className="hover:text-kd-gold">{contact.email}</a>}
+              {contact.instagram && <a href={`https://instagram.com/${contact.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-kd-gold">Instagram</a>}
+              <Link href={siteConfig.consultationHref} className="hover:text-kd-gold">Book a consultation</Link>
+            </div>
           </div>
         </div>
 

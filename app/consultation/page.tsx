@@ -6,7 +6,8 @@ export const metadata = {
   description: "Contact DIXIT about bespoke design, collections, styling, and personal fashion enquiries.",
 };
 
-export default function ConsultationPage() {
+export default async function ConsultationPage({ searchParams }: { searchParams: Promise<{ interest?: string | string[] }> }) {
+  const { interest } = await searchParams;
   return (
     <main>
       <section className="bg-kd-black py-24 text-kd-white md:py-32">
@@ -26,7 +27,7 @@ export default function ConsultationPage() {
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">Your Enquiry</p>
             <p className="mt-6 max-w-sm text-sm leading-7 text-kd-gray">Share a few details so the DIXIT team can understand what you are looking for and guide the next step.</p>
           </aside>
-          <ConsultationForm />
+          <ConsultationForm interest={typeof interest === "string" ? interest.slice(0, 200) : ""} />
         </Container>
       </section>
     </main>

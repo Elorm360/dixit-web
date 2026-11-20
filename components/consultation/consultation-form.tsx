@@ -2,9 +2,11 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { whatsappLink } from "@/config/site";
 
 const serviceOptions = [
   "Bespoke",
+  "Womenswear",
   "Menswear",
   "Ready to Wear",
   "Occasion Wear",
@@ -15,9 +17,23 @@ const consultationOptions = ["Atelier", "Remote"] as const;
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 
-export function ConsultationForm() {
+function whatsappSummary(data: Record<string, string>) {
+  const lines = [
+    `Hello DIXIT, I just sent an enquiry on your website.`,
+    `Name: ${data.full_name}`,
+    `Service: ${data.service}`,
+    data.interest && `Interested in: ${data.interest}`,
+    `Occasion: ${data.occasion}`,
+    data.event_date && `Event date: ${data.event_date}`,
+    `Consultation: ${data.consultation_type}, ${data.preferred_date} at ${data.preferred_time}`,
+  ];
+  return lines.filter(Boolean).join("\n");
+}
+
+export function ConsultationForm({ interest = "" }: { interest?: string }) {
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [sent, setSent] = useState<Record<string, string>>({});
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,69 +41,30 @@ export function ConsultationForm() {
     setErrorMessage("");
 
     const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    // A quiet honeypot field helps filter basic automated form submissions.
-    if (String(formData.get("website") ?? "").trim()) {
-      setSubmissionState("success");
-      return;
-    }
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-    if (!supabaseUrl || !publishableKey) {
-      setSubmissionState("error");
-      setErrorMessage("The enquiry service is not configured yet. Please contact us directly while we complete setup.");
-      return;
-    }
-
-    const payload = {
-      service: String(formData.get("service") ?? ""),
-      occasion: String(formData.get("occasion") ?? "").trim(),
-      event_date: String(formData.get("event_date") ?? "") || null,
-      consultation_type: String(formData.get("consultation_type") ?? ""),
-      preferred_date: String(formData.get("preferred_date") ?? ""),
-      preferred_time: String(formData.get("preferred_time") ?? ""),
-      full_name: String(formData.get("full_name") ?? "").trim(),
-      email: String(formData.get("email") ?? "").trim(),
-      phone: String(formData.get("phone") ?? "").trim(),
-      location: String(formData.get("location") ?? "").trim(),
-      details: String(formData.get("details") ?? "").trim(),
-    };
+    const payload = Object.fromEntries(
+      [...new FormData(form)].map(([k, v]) => [k, String(v).trim()]),
+    );
 
     try {
-      const response = await fetch(
-        `${supabaseUrl.replace(/\/$/, "")}/rest/v1/consultation_requests`,
-        {
-          method: "POST",
-          headers: {
-            apikey: publishableKey,
-            Authorization: `Bearer ${publishableKey}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-          body: JSON.stringify(payload),
-        },
-      );
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "We could not send your enquiry just now. Please try again.");
 
-      if (!response.ok) {
-        const responseText = await response.text();
-        console.error("DIXIT enquiry submission failed:", response.status, responseText);
-        throw new Error("We could not send your enquiry just now. Please check your details and try again.");
-      }
-
+      setSent(payload);
       setSubmissionState("success");
       form.reset();
     } catch (error) {
       setSubmissionState("error");
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again in a moment.",
-      );
+      setErrorMessage(error instanceof Error ? error.message : "Something went wrong. Please try again in a moment.");
     }
   }
+
+  const successWhatsapp = whatsappLink(whatsappSummary(sent));
+  const errorWhatsapp = whatsappLink("Hello DIXIT, I'd like to make an enquiry.");
 
   if (submissionState === "success") {
     return (
@@ -95,6 +72,12 @@ export function ConsultationForm() {
         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">Enquiry received</p>
         <h2 className="font-display mt-5 text-4xl font-medium md:text-5xl">Thank you for reaching out.</h2>
         <p className="mt-6 max-w-xl text-sm leading-7 text-kd-gray">Your enquiry has been sent to the DIXIT team. We will be in touch to discuss the next step.</p>
+        {successWhatsapp && (
+          <div className="mt-8">
+            <p className="mb-4 text-sm text-kd-gray">Prefer to talk now? Send the same details to us on WhatsApp.</p>
+            <Button href={successWhatsapp}>Continue on WhatsApp</Button>
+          </div>
+        )}
         <button type="button" onClick={() => setSubmissionState("idle")} className="mt-8 border-b border-kd-black pb-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em]">Send another enquiry</button>
       </div>
     );
@@ -117,6 +100,9 @@ export function ConsultationForm() {
 
       <fieldset className="grid gap-6 md:grid-cols-2">
         <legend className="font-display mb-6 text-3xl md:text-4xl">Tell us a little more.</legend>
+        {interest && (
+          <label className="block md:col-span-2"><span className="kd-label">Interested in</span><input className="kd-input" name="interest" maxLength={200} defaultValue={interest} /></label>
+        )}
         <label className="block"><span className="kd-label">Occasion or requirement</span><input className="kd-input" name="occasion" maxLength={200} placeholder="What do you have in mind?" required /></label>
         <label className="block"><span className="kd-label">Event date (if applicable)</span><input className="kd-input" type="date" name="event_date" /></label>
       </fieldset>
@@ -160,7 +146,12 @@ export function ConsultationForm() {
         <Button type="submit" disabled={submissionState === "submitting"}>
           {submissionState === "submitting" ? "Sending enquiry…" : "Send your enquiry"}
         </Button>
-        {submissionState === "error" && <p className="mt-4 text-sm text-red-700" role="alert">{errorMessage}</p>}
+        {submissionState === "error" && (
+          <p className="mt-4 text-sm text-red-700" role="alert">
+            {errorMessage}
+            {errorWhatsapp && <> <a href={errorWhatsapp} className="underline">Message us on WhatsApp</a>.</>}
+          </p>
+        )}
         <p className="mt-4 max-w-lg text-xs leading-6 text-kd-gray">Your details are used only to respond to this enquiry. Please do not include payment information or other sensitive data.</p>
       </div>
     </form>
