@@ -9,8 +9,6 @@ import { getPieces } from "@/lib/pieces";
 
 type CollectionPageProps = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
-
 export function generateStaticParams() {
   return collectionCategories.map(({ slug }) => ({ slug }));
 }
@@ -25,7 +23,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   const { slug } = await params;
   const category = getCollectionCategory(slug);
   if (!category) notFound();
-  const pieces = getPieces(slug);
+  const pieces = await getPieces(slug);
 
   return (
     <main>

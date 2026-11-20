@@ -35,26 +35,41 @@
   --font-display: var(--font-display);
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--background); }
-body {
-  margin: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+/* Element defaults live in the base layer so Tailwind utilities (text colours,
+   font sizes, heights) always win over them. */
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; background: var(--background); }
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button, input, textarea, select { font: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  img { max-width: 100%; height: auto; }
+  ::selection { background: var(--kd-gold); color: var(--kd-black); }
 }
-a { color: inherit; text-decoration: none; }
-button, input, textarea, select { font: inherit; }
-button, a { -webkit-tap-highlight-color: transparent; }
-img { max-width: 100%; height: auto; }
-::selection { background: var(--kd-gold); color: var(--kd-black); }
 .font-display { font-family: var(--font-display), serif; }
 .kd-container {
   width: min(calc(100% - (var(--page-padding) * 2)), var(--container-width));
   margin-inline: auto;
 }
+.kd-reveal { transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1); }
+.kd-reveal[data-reveal="hidden"] { opacity: 0; transform: translateY(2rem); }
+
+@keyframes kd-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.kd-marquee { animation: kd-marquee 40s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .kd-marquee { animation: none; } }
+
+@keyframes kd-hero-in { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
+.kd-hero-in { animation: kd-hero-in 1100ms cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .kd-hero-in { animation: none; } }
+
 @media (min-width: 768px) { :root { --page-padding: 2rem; } }
 @media (min-width: 1280px) { :root { --page-padding: 3rem; } }
 

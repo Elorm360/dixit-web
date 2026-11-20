@@ -30,7 +30,8 @@ function whatsappSummary(data: Record<string, string>) {
   return lines.filter(Boolean).join("\n");
 }
 
-export function ConsultationForm({ interest = "" }: { interest?: string }) {
+export function ConsultationForm({ interest = "", minDate }: { interest?: string; minDate: string }) {
+  const suggestedService = serviceOptions.find((o) => interest.toLowerCase().includes(o.toLowerCase()));
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [sent, setSent] = useState<Record<string, string>>({});
@@ -91,8 +92,8 @@ export function ConsultationForm({ interest = "" }: { interest?: string }) {
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {serviceOptions.map((option) => (
             <label key={option} className="cursor-pointer">
-              <input className="peer sr-only" type="radio" name="service" value={option} required />
-              <span className="flex min-h-14 items-center border border-kd-black/15 px-5 text-sm transition-colors peer-checked:border-kd-gold-dark peer-checked:bg-kd-warm-gold">{option}</span>
+              <input className="peer sr-only" type="radio" name="service" value={option} required defaultChecked={option === suggestedService} />
+              <span className="flex min-h-14 items-center border border-kd-black/15 px-5 text-sm transition-colors peer-checked:border-kd-gold-dark peer-checked:bg-kd-warm-gold peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-kd-gold-dark">{option}</span>
             </label>
           ))}
         </div>
@@ -104,7 +105,7 @@ export function ConsultationForm({ interest = "" }: { interest?: string }) {
           <label className="block md:col-span-2"><span className="kd-label">Interested in</span><input className="kd-input" name="interest" maxLength={200} defaultValue={interest} /></label>
         )}
         <label className="block"><span className="kd-label">Occasion or requirement</span><input className="kd-input" name="occasion" maxLength={200} placeholder="What do you have in mind?" required /></label>
-        <label className="block"><span className="kd-label">Event date (if applicable)</span><input className="kd-input" type="date" name="event_date" /></label>
+        <label className="block"><span className="kd-label">Event date (if applicable)</span><input className="kd-input" type="date" name="event_date" min={minDate} /></label>
       </fieldset>
 
       <fieldset>
@@ -113,12 +114,12 @@ export function ConsultationForm({ interest = "" }: { interest?: string }) {
           {consultationOptions.map((option) => (
             <label key={option} className="cursor-pointer">
               <input className="peer sr-only" type="radio" name="consultation_type" value={option} required />
-              <span className="flex min-h-14 items-center border border-kd-black/15 px-5 text-sm transition-colors peer-checked:border-kd-gold-dark peer-checked:bg-kd-warm-gold">{option}</span>
+              <span className="flex min-h-14 items-center border border-kd-black/15 px-5 text-sm transition-colors peer-checked:border-kd-gold-dark peer-checked:bg-kd-warm-gold peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-kd-gold-dark">{option}</span>
             </label>
           ))}
         </div>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <label className="block"><span className="kd-label">Preferred date</span><input className="kd-input" type="date" name="preferred_date" required /></label>
+          <label className="block"><span className="kd-label">Preferred date</span><input className="kd-input" type="date" name="preferred_date" min={minDate} required /></label>
           <label className="block"><span className="kd-label">Preferred time</span><input className="kd-input" type="time" name="preferred_time" required /></label>
         </div>
       </fieldset>

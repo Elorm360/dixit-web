@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { formatPrice } from "@/config/site";
 import { getAllPieces } from "@/lib/pieces";
+import { Reveal } from "@/components/ui/reveal";
+import { testimonials } from "@/data/testimonials";
 
 const pillars = [
   ["01", "Bespoke", "Personal pieces shaped around your proportions, preferences, and occasion."],
@@ -11,8 +13,8 @@ const pillars = [
   ["03", "The Collections", "A changing expression of the DIXIT point of view across fashion and form."],
 ];
 
-export default function Home() {
-  const featured = getAllPieces().slice(0, 3);
+export default async function Home() {
+  const featured = (await getAllPieces()).slice(0, 3);
   return (
     <main>
       <section className="relative isolate flex min-h-[calc(100svh-5rem)] items-end overflow-hidden bg-kd-black text-kd-white">
@@ -39,7 +41,7 @@ export default function Home() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
         <Container className="grid min-h-[calc(100svh-5rem)] items-end gap-10 pb-16 pt-24 lg:grid-cols-2 lg:pb-24">
-          <div className="max-w-4xl">
+          <div className="kd-hero-in max-w-4xl">
             <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-kd-gold">A Modern Fashion House</p>
             <h1 className="font-display text-[clamp(3.75rem,9vw,8.5rem)] font-medium leading-[0.78] tracking-[-0.05em]">Style is a <span className="block italic text-kd-gold">statement.</span></h1>
             <p className="mt-9 max-w-xl text-base leading-8 text-white/85 md:text-lg">Bespoke craft. Ready-to-wear expression. A wardrobe shaped around individuality.</p>
@@ -52,14 +54,26 @@ export default function Home() {
         <div className="absolute right-8 top-7 hidden text-[0.6rem] uppercase tracking-[0.3em] text-white/75 md:block">Accra · Beyond</div>
       </section>
 
+      <div className="overflow-hidden border-y border-kd-gold/30 bg-kd-black py-5 text-kd-gold" aria-hidden="true">
+        <div className="kd-marquee flex w-max gap-12 whitespace-nowrap font-display text-2xl italic md:text-3xl">
+          {[0, 1].map((n) => (
+            <div key={n} className="flex gap-12">
+              {["Bespoke", "Ready to Wear", "Occasion", "Womenswear", "Menswear", "Made in Accra"].map((w) => (
+                <span key={w} className="flex items-center gap-12">{w}<span className="text-sm not-italic text-white/30">✦</span></span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <section className="bg-kd-cream py-24 text-kd-black md:py-36">
         <Container className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">The DIXIT Point of View</p>
-          <div>
+          <Reveal>
             <h2 className="font-display max-w-4xl text-5xl font-medium leading-[0.98] tracking-[-0.025em] md:text-7xl">Clothing is what you wear. <span className="block italic text-kd-gold-dark">Style is what you say.</span></h2>
             <p className="mt-8 max-w-2xl text-base leading-8 text-kd-gray md:text-lg">DIXIT brings bespoke tailoring, ready-to-wear collections, and a wider fashion perspective together in one house — with room for individuality at every turn.</p>
             <Link href="/our-story" className="mt-8 inline-flex border-b border-kd-black pb-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] transition-colors hover:border-kd-gold-dark hover:text-kd-gold-dark">Discover the house</Link>
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -74,11 +88,11 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3">
             {pillars.map(([number, title, copy]) => (
-              <article key={number} className="border-b border-white/10 py-10 md:border-b-0 md:border-r md:px-8 md:first:pl-0 md:last:border-r-0 md:last:pr-0">
+              <Reveal key={number} delay={Number(number) * 120} className="border-b border-white/10 py-10 md:border-b-0 md:border-r md:px-8 md:first:pl-0 md:last:border-r-0 md:last:pr-0">
                 <span className="text-xs tracking-[0.2em] text-kd-gold">{number}</span>
                 <h3 className="font-display mt-8 text-3xl">{title}</h3>
                 <p className="mt-4 max-w-sm text-sm leading-7 text-white/55">{copy}</p>
-              </article>
+              </Reveal>
             ))}
           </div>
         </Container>
@@ -115,6 +129,22 @@ export default function Home() {
           </Container>
         )}
       </section>
+
+      {testimonials.length > 0 && (
+        <section className="bg-kd-cream py-24 text-kd-black md:py-32">
+          <Container>
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">In Their Words</p>
+            <div className={`mt-12 grid gap-12 ${testimonials.length > 1 ? "lg:grid-cols-2" : ""}`}>
+              {testimonials.map((t, i) => (
+                <Reveal key={t.name} delay={i * 120}>
+                  <blockquote className="font-display text-3xl leading-tight md:text-4xl">“{t.quote}”</blockquote>
+                  <p className="mt-6 text-[0.68rem] font-semibold uppercase tracking-[0.2em]">{t.name}{t.detail && <span className="font-normal text-kd-gray"> · {t.detail}</span>}</p>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <section className="bg-kd-warm-gold py-24 text-kd-black md:py-32">
         <Container className="text-center">

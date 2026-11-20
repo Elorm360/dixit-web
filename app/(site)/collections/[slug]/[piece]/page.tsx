@@ -5,21 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { formatPrice, whatsappLink } from "@/config/site";
 import { getCollectionCategory } from "@/data/collections";
-import { getAllPieces, getPiece } from "@/lib/pieces";
+import { getAllPieces, getPieces } from "@/lib/pieces";
 
 type PiecePageProps = { params: Promise<{ slug: string; piece: string }> };
 
-export const dynamicParams = false;
+// Pieces added from the dashboard after a deploy are rendered on first visit.
+export const dynamicParams = true;
 
-export function generateStaticParams() {
-  const all = getAllPieces().map((p) => ({ slug: p.collection, piece: p.slug }));
+export async function generateStaticParams() {
+  const all = (await getAllPieces()).map((p) => ({ slug: p.collection, piece: p.slug }));
   // Next needs at least one param set for a static route; this placeholder 404s.
   return all.length ? all : [{ slug: "none", piece: "none" }];
 }
 
 export async function generateMetadata({ params }: PiecePageProps) {
   const { slug, piece: pieceSlug } = await params;
-  const piece = getPiece(slug, pieceSlug);
+  const piece = (await getPieces(slug)).find((p) => p.slug === pieceSlug);
   if (!piece) return {};
   return {
     title: piece.name,
@@ -31,8 +32,10 @@ export async function generateMetadata({ params }: PiecePageProps) {
 export default async function PiecePage({ params }: PiecePageProps) {
   const { slug, piece: pieceSlug } = await params;
   const category = getCollectionCategory(slug);
-  const piece = getPiece(slug, pieceSlug);
+  const all = await getPieces(slug);
+  const piece = all.find((p) => p.slug === pieceSlug);
   if (!category || !piece) notFound();
+  const more = all.filter((p) => p.slug !== piece.slug).slice(0, 3);
 
   const interest = `${piece.name} (${category.name})`;
   const whatsapp = whatsappLink(`Hello DIXIT, I'm interested in the ${interest}.`);
@@ -66,6 +69,29 @@ export default async function PiecePage({ params }: PiecePageProps) {
             <p className="mt-6 text-xs leading-6 text-kd-gray">Available made to measure. Sizing, fabric and timing are confirmed during your consultation.</p>
           </div>
         </div>
+        {more.length > 0 && (
+          <section className="mt-24 border-t border-kd-black/15 pt-12 md:mt-32">
+            <div className="flex items-baseline justify-between gap-6">
+              <h2 className="font-display text-3xl md:text-4xl">More from {category.name}</h2>
+              <Link href={`/collections/${slug}`} className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-kd-gold-dark">View all →</Link>
+            </div>
+            <ul className="mt-10 grid gap-6 sm:grid-cols-3">
+              {more.map((p) => (
+                <li key={p.slug}>
+                  <Link href={`/collections/${slug}/${p.slug}`} className="group block">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-kd-warm-gold">
+                      <Image src={p.images[0]} alt={p.name} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]" />
+                    </div>
+                    <div className="mt-4 flex items-baseline justify-between gap-4">
+                      <span className="font-display text-2xl">{p.name}</span>
+                      <span className="shrink-0 text-xs uppercase tracking-[0.14em] text-kd-gray">{formatPrice(p.price)}</span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </Container>
     </main>
   );
