@@ -13,8 +13,10 @@ alter table private.staff_members
 alter table private.staff_members
   add constraint staff_members_role_check check (role in ('super_admin', 'staff'));
 
--- Whoever set the dashboard up so far becomes a super admin.
-update private.staff_members set role = 'super_admin';
+-- Whoever set the dashboard up so far becomes a super admin
+-- (only when there is none yet, so re-running this never promotes anyone else).
+update private.staff_members set role = 'super_admin'
+where not exists (select 1 from private.staff_members where role = 'super_admin');
 
 create or replace function private.is_super_admin()
 returns boolean
