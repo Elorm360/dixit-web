@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DIXIT — website
 
-## Getting Started
-
-First, run the development server:
+Next.js site for DIXIT, a fashion house in Accra.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+cp .env.example .env.local   # then fill in the values
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where to update things
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | Where |
+|---|---|
+| WhatsApp, email, phone, Instagram, address, hours | `config/site.ts` → `contact` |
+| Currency, bespoke "from" price, bespoke timing | `config/site.ts` → `pricing` |
+| Collection photos | drop into `public/collections/<collection>/` (see `public/collections/README.md`) |
+| Piece names, descriptions, prices | `data/pieces.ts` |
+| Founder story and photo | `data/founder.ts` (+ photo in `public/founder/`) |
+| Journal posts | `data/journal.ts` |
+| Home page photo | replace `public/brand/dixit-hero.jpg` (portrait, 1600 × 2400 px or larger) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Anything left empty stays hidden on the site — no broken links or blank sections.
 
-## Learn More
+## Enquiries
 
-To learn more about Next.js, take a look at the following resources:
+The consultation form posts to `/api/enquiry`, which:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Emails** the enquiry to `ENQUIRY_EMAIL_TO` via [Resend](https://resend.com) (reply goes straight to the client), and
+2. **Saves** it to Supabase if `NEXT_PUBLIC_SUPABASE_*` is set (optional).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+After sending, the client gets a **"Continue on WhatsApp"** button with their details pre-filled, and a floating WhatsApp button appears on every page once `contact.whatsapp` is set.
 
-## Deploy on Vercel
+### Resend setup
+1. Create a free account at resend.com → **API Keys** → create a key.
+2. In Vercel → Project → **Settings → Environment Variables**, add `RESEND_API_KEY` and `ENQUIRY_EMAIL_TO`, then redeploy.
+3. Until you verify your own domain in Resend, the default sender `onboarding@resend.dev` can only deliver to the email address you signed up to Resend with. After verifying a domain, set `ENQUIRY_EMAIL_FROM` (e.g. `DIXIT <enquiries@yourdomain.com>`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Studio dashboard (`/admin`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Staff sign in at **/admin** to:
+
+- **Enquiries** — see every consultation request, filter/search, set a status (New → Contacted → Consultation booked → In progress → Completed / Archived), keep private notes, and reply in one tap by WhatsApp, email or phone. Export to CSV.
+- **Pieces** — upload photos, set names, descriptions and prices, reorder, publish/hide and delete. Changes appear on the website within seconds, no deploy needed. (Pieces in the photo folders still work and are listed read-only.)
+- **Overview** — new enquiries, this week's count, active clients and upcoming consultation dates.
+
+### Setup (once)
+1. Migrations in `supabase/migrations/` are already applied to the production project. For new ones: `npx supabase link` then `npx supabase db push`.
+2. In Supabase → **Authentication → Users**, add a user (email + temporary password, auto confirm) for each team member.
+3. A **super admin** gives them access in the dashboard under **Team** (role: *Staff* or *Super admin*). They change the temporary password under **My account**.
+   The very first super admin is set in the SQL editor:
+   ```sql
+   insert into private.staff_members (user_id, email, role)
+   select id, email, 'super_admin' from auth.users where email = 'person@example.com'
+   on conflict (user_id) do update set role = 'super_admin';
+   ```
+4. Make sure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` are set in Vercel.
+
+Security: database row-level security only lets staff read or change enquiries and pieces; the public can only submit enquiries and view published pieces. Signing in with a non-staff account is refused.
+
+### Local development
+`npx supabase start` runs a local Supabase with all migrations (needs Docker). Put its URL and publishable key in `.env.local`.

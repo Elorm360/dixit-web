@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/ui/reveal";
 
 type SectionIntroProps = {
   eyebrow: string;
@@ -16,7 +17,7 @@ export function SectionIntro({
   className = "",
 }: SectionIntroProps) {
   return (
-    <div className={className}>
+    <Reveal className={className}>
       <p className={`text-[0.65rem] font-semibold uppercase tracking-[0.3em] ${inverse ? "text-kd-gold" : "text-kd-gold-dark"}`}>
         {eyebrow}
       </p>
@@ -28,6 +29,6 @@ export function SectionIntro({
           {copy}
         </p>
       ) : null}
-    </div>
+    </Reveal>
   );
 }
