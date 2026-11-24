@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { requireStaff } from "@/lib/admin";
+import { requireStaff, roleLabels } from "@/lib/admin";
 import { signOut } from "../login/actions";
 import { AdminNav } from "./admin-nav";
 
 export const metadata = { title: { default: "Dashboard", template: "%s · DIXIT Dashboard" }, robots: { index: false } };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { supabase, email } = await requireStaff();
+  const { supabase, email, role } = await requireStaff();
   const { count } = await supabase
     .from("consultation_requests")
     .select("id", { count: "exact", head: true })
@@ -24,10 +24,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/" className="text-[0.6rem] uppercase tracking-[0.2em] text-white/50 hover:text-kd-gold lg:mt-3 lg:block" target="_blank">View site ↗</Link>
         </div>
         <div className="px-3 pb-3 lg:flex-1 lg:px-3">
-          <AdminNav newCount={count ?? 0} />
+          <AdminNav newCount={count ?? 0} isSuperAdmin={role === "super_admin"} />
         </div>
         <div className="hidden border-t border-white/10 px-6 py-5 lg:block">
           <p className="truncate text-xs text-white/50">{email}</p>
+          <p className="mt-1 text-[0.6rem] uppercase tracking-[0.2em] text-kd-gold">{roleLabels[role]}</p>
           <form action={signOut}>
             <button className="mt-2 text-[0.65rem] uppercase tracking-[0.2em] text-white/70 hover:text-kd-gold">Sign out</button>
           </form>

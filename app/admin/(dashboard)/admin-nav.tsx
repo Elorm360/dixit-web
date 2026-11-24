@@ -7,13 +7,16 @@ const links = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/pieces", label: "Pieces" },
+  { href: "/admin/team", label: "Team", superAdminOnly: true },
+  { href: "/admin/guide", label: "Getting started" },
+  { href: "/admin/account", label: "My account" },
 ];
 
-export function AdminNav({ newCount }: { newCount: number }) {
+export function AdminNav({ newCount, isSuperAdmin }: { newCount: number; isSuperAdmin: boolean }) {
   const pathname = usePathname();
   return (
     <nav className="flex gap-1 overflow-x-auto lg:flex-col" aria-label="Dashboard">
-      {links.map((l) => {
+      {links.filter((l) => !l.superAdminOnly || isSuperAdmin).map((l) => {
         const active = l.href === "/admin" ? pathname === "/admin" : pathname.startsWith(l.href);
         return (
           <Link

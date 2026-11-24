@@ -36,7 +36,21 @@ export async function requireStaff() {
     await supabase.auth.signOut();
     redirect("/admin/login?error=not-staff");
   }
-  return { supabase, userId, email: (data.claims.email as string | undefined) ?? "" };
+  // Falls back to "staff" if the roles migration has not been applied yet.
+  const { data: roleData, error: roleError } = await supabase.rpc("my_staff_role");
+  const role: StaffRole = !roleError && roleData === "super_admin" ? "super_admin" : "staff";
+  return { supabase, userId, role, email: (data.claims.email as string | undefined) ?? "" };
+}
+
+export type StaffRole = "super_admin" | "staff";
+
+export const roleLabels: Record<StaffRole, string> = { super_admin: "Super admin", staff: "Staff" };
+
+/** For pages and actions only super admins may use. Other staff go back to the overview. */
+export async function requireSuperAdmin() {
+  const staff = await requireStaff();
+  if (staff.role !== "super_admin") redirect("/admin?error=super-admin-only");
+  return staff;
 }
 
 export function formatDate(value: string | null, withTime = false) {
