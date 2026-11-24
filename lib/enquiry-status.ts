@@ -7,6 +7,9 @@ export const ENQUIRY_STATUSES = [
   { value: "archived", label: "Archived", tone: "bg-neutral-200 text-neutral-700" },
 ] as const;
 
+/** Services clients can pick on the consultation form (matches app/api/enquiry). */
+export const ENQUIRY_SERVICES = ["Bespoke", "Womenswear", "Menswear", "Ready to Wear", "Occasion Wear", "Styling", "Other"] as const;
+
 export function statusMeta(value: string) {
   return ENQUIRY_STATUSES.find((s) => s.value === value) ?? { value, label: value, tone: "bg-neutral-200 text-neutral-700" };
 }

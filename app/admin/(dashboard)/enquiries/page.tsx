@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHeader, Panel, StatusBadge, adminButtonOutline, adminButtonPrimary } from "@/components/admin/ui";
-import { type Enquiry, formatDate, requireStaff } from "@/lib/admin";
-import { ENQUIRY_STATUSES } from "@/lib/enquiry-status";
+import { type Enquiry, formatDate, formatDateTime, requireStaff } from "@/lib/admin";
+import { ENQUIRY_SERVICES, ENQUIRY_STATUSES } from "@/lib/enquiry-status";
 
 export const metadata = { title: "Enquiries" };
 
@@ -12,16 +12,18 @@ const FILTERS = [
   ...ENQUIRY_STATUSES.map(({ value, label }) => ({ value, label })),
 ];
 
-type Search = { status?: string; q?: string; page?: string };
+type Search = { status?: string; q?: string; page?: string; service?: string };
 
 export default async function EnquiriesPage({ searchParams }: { searchParams: Promise<Search> }) {
   const { supabase } = await requireStaff();
-  const { status = "", q = "", page = "1" } = await searchParams;
+  const { status = "", q = "", page = "1", service: serviceParam = "" } = await searchParams;
+  const service = (ENQUIRY_SERVICES as readonly string[]).includes(serviceParam) ? serviceParam : "";
   const pageNum = Math.max(1, Number.parseInt(page, 10) || 1);
 
   let query = supabase.from("consultation_requests").select("*", { count: "exact" }).order("created_at", { ascending: false });
   if (status === "active") query = query.in("status", ["contacted", "scheduled", "in_progress"]);
   else if (status) query = query.eq("status", status);
+  if (service) query = query.eq("service", service);
   // Strip characters that have meaning in PostgREST filter syntax.
   const term = q.replace(/[,()*%\\]/g, " ").trim();
   if (term) query = query.or(`full_name.ilike.*${term}*,email.ilike.*${term}*,phone.ilike.*${term}*,occasion.ilike.*${term}*`);
@@ -30,7 +32,7 @@ export default async function EnquiriesPage({ searchParams }: { searchParams: Pr
   const pages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
 
   const href = (patch: Partial<Search>) => {
-    const p = new URLSearchParams({ ...(status && { status }), ...(q && { q }), ...patch } as Record<string, string>);
+    const p = new URLSearchParams({ ...(status && { status }), ...(service && { service }), ...(q && { q }), ...patch } as Record<string, string>);
     for (const [k, v] of [...p]) if (!v || (k === "page" && v === "1")) p.delete(k);
     const s = p.toString();
     return `/admin/enquiries${s ? `?${s}` : ""}`;
@@ -56,9 +58,13 @@ export default async function EnquiriesPage({ searchParams }: { searchParams: Pr
             </Link>
           ))}
         </div>
-        <form className="flex gap-2" action="/admin/enquiries">
+        <form className="flex flex-wrap gap-2" action="/admin/enquiries">
           {status && <input type="hidden" name="status" value={status} />}
-          <input name="q" defaultValue={q} placeholder="Search name, email, phone…" className="kd-input min-h-10 py-2 text-sm xl:w-72" />
+          <select name="service" defaultValue={service} className="kd-input min-h-10 w-auto py-2 text-sm" aria-label="Filter by service">
+            <option value="">All services</option>
+            {ENQUIRY_SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <input name="q" defaultValue={q} placeholder="Search name, email, phone…" className="kd-input min-h-10 flex-1 py-2 text-sm xl:w-72" />
           <button className={adminButtonPrimary}>Search</button>
         </form>
       </div>
@@ -88,7 +94,13 @@ export default async function EnquiriesPage({ searchParams }: { searchParams: Pr
                       {e.service}
                       <p className="max-w-56 truncate text-xs text-kd-gray">{e.occasion}</p>
                     </td>
-                    <td className="px-5 py-4 whitespace-nowrap">{formatDate(e.preferred_date)}<p className="text-xs text-kd-gray">{e.preferred_time.slice(0, 5)} · {e.consultation_type}</p></td>
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      {e.consultation_at ? (
+                        <><span className="text-violet-900">{formatDateTime(e.consultation_at)}</span><p className="text-xs text-violet-800">Booked · {e.consultation_type}</p></>
+                      ) : (
+                        <>{formatDate(e.preferred_date)}<p className="text-xs text-kd-gray">{e.preferred_time.slice(0, 5)} · {e.consultation_type} · requested</p></>
+                      )}
+                    </td>
                     <td className="px-5 py-4 whitespace-nowrap text-kd-gray">{formatDate(e.created_at)}</td>
                     <td className="px-5 py-4"><StatusBadge status={e.status} /></td>
                   </tr>
@@ -112,7 +124,7 @@ export default async function EnquiriesPage({ searchParams }: { searchParams: Pr
             </ul>
           </>
         ) : (
-          <p className="px-6 py-14 text-center text-sm text-kd-gray">{q || status ? "No enquiries match these filters." : "No enquiries yet."}</p>
+          <p className="px-6 py-14 text-center text-sm text-kd-gray">{q || status || service ? "No enquiries match these filters." : "No enquiries yet."}</p>
         )}
       </Panel>
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { ENQUIRY_SERVICES } from "@/lib/enquiry-status";
 
-const SERVICES = ["Bespoke", "Womenswear", "Menswear", "Ready to Wear", "Occasion Wear", "Styling", "Other"];
+const SERVICES: readonly string[] = ENQUIRY_SERVICES;
 const CONSULTATION_TYPES = ["Atelier", "Remote"];
 
 const LIMITS: Record<string, number> = {
