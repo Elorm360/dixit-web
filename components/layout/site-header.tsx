@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
+import type { NavItem } from "@/lib/content";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 
-export function SiteHeader() {
+export function SiteHeader({ navigation }: { navigation: NavItem[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
@@ -33,7 +34,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
-          {siteConfig.navigation.map((item) => (
+          {navigation.map((item) => (
             <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className={`relative py-2 text-[0.68rem] font-medium uppercase tracking-[0.18em] transition-colors hover:text-kd-gold after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:bg-kd-gold after:transition-transform after:duration-300 ${isActive(item.href) ? "text-kd-white after:scale-x-100" : "text-white/70 after:scale-x-0 hover:after:scale-x-100"}`}>
               {item.label}
             </Link>
@@ -54,7 +55,7 @@ export function SiteHeader() {
       <div id="mobile-navigation" className={`overflow-hidden border-t border-white/10 bg-kd-black transition-[max-height,opacity] duration-300 lg:hidden ${menuOpen ? "max-h-[calc(100svh-5rem)] overflow-y-auto opacity-100" : "max-h-0 border-t-transparent opacity-0"}`}>
         <Container className="flex flex-col py-8">
           <nav className="flex flex-col" aria-label="Mobile navigation">
-            {siteConfig.navigation.map((item) => (
+            {navigation.map((item) => (
               <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} aria-current={isActive(item.href) ? "page" : undefined} className={`border-b border-white/10 py-4 font-display text-3xl transition-colors hover:text-kd-gold ${isActive(item.href) ? "text-kd-gold" : "text-white/90"}`}>
                 {item.label}
               </Link>

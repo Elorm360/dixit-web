@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { formatPrice, whatsappLink } from "@/config/site";
+import { formatPrice } from "@/config/site";
+import { getSiteContent, whatsappHref } from "@/lib/content";
 import { getCollectionCategory } from "@/data/collections";
 import { getAllPieces, getPieces } from "@/lib/pieces";
 
@@ -38,7 +39,7 @@ export default async function PiecePage({ params }: PiecePageProps) {
   const more = all.filter((p) => p.slug !== piece.slug).slice(0, 3);
 
   const interest = `${piece.name} (${category.name})`;
-  const whatsapp = whatsappLink(`Hello DIXIT, I'm interested in the ${interest}.`);
+  const whatsapp = whatsappHref((await getSiteContent()).contact.whatsapp, `Hello DIXIT, I'm interested in the ${interest}.`);
 
   return (
     <main className="bg-kd-cream text-kd-black">

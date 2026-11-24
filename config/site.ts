@@ -1,11 +1,7 @@
-import { posts } from "@/data/journal";
-
 /**
- * DIXIT site settings — the one place to update contact details.
- *
- * Leave a value as an empty string ("") while it is pending. The site hides
- * buttons and links whose details have not been provided yet, so nothing
- * broken or empty is shown to visitors.
+ * Default contact details. Staff edit the live values in the dashboard
+ * (Website content → Business details); these are used until then.
+ * Empty values hide the matching buttons and links on the site.
  */
 export const contact = {
   /** WhatsApp number in international format, digits only. e.g. "233241234567" */
@@ -42,22 +38,8 @@ export const siteConfig = {
   url: "https://dixit-web.vercel.app",
   description:
     "DIXIT is a contemporary fashion house in Accra bringing together bespoke tailoring and ready-to-wear collections.",
-  navigation: [
-    { label: "Collections", href: "/collections" },
-    { label: "Bespoke", href: "/bespoke" },
-    { label: "The House", href: "/our-story" },
-    // The Journal appears in the menu once data/journal.ts has a post.
-    ...(posts.length ? [{ label: "Journal", href: "/journal" }] : []),
-    { label: "Contact", href: "/contact" },
-  ],
   consultationHref: "/consultation",
 } as const;
-
-export function whatsappLink(message?: string) {
-  if (!contact.whatsapp) return null;
-  const text = message ? `?text=${encodeURIComponent(message)}` : "";
-  return `https://wa.me/${contact.whatsapp}${text}`;
-}
 
 export function formatPrice(price: number | null | undefined) {
   if (price == null) return pricing.priceOnRequestLabel;

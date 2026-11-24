@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
-import { contact, siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site";
+import { getSiteContent } from "@/lib/content";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-sans", subsets: ["latin"], display: "swap" });
@@ -24,7 +25,8 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-const structuredData = {
+function structuredData(contact: Awaited<ReturnType<typeof getSiteContent>>["contact"]) {
+  return {
   "@context": "https://schema.org",
   "@type": "ClothingStore",
   name: "DIXIT",
@@ -35,14 +37,15 @@ const structuredData = {
   ...(contact.phone && { telephone: contact.phone }),
   ...(contact.email && { email: contact.email }),
   ...(contact.instagram && { sameAs: [`https://instagram.com/${contact.instagram}`] }),
-};
+  };
+}
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={`${inter.variable} ${cormorant.variable}`}>
         {children}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData((await getSiteContent()).contact)).replace(/</g, "\\u003c") }} />
       </body>
     </html>
   );

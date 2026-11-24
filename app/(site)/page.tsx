@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/container";
 import { formatPrice } from "@/config/site";
 import { getFeaturedPieces } from "@/lib/pieces";
 import { Reveal } from "@/components/ui/reveal";
-import { testimonials } from "@/data/testimonials";
+import { getSiteContent, getTestimonials } from "@/lib/content";
 import { collectionCategories } from "@/data/collections";
 
 // Shown on the home page until collection photos are added.
@@ -18,14 +18,14 @@ const pillars = [
 ];
 
 export default async function Home() {
-  const featured = await getFeaturedPieces(3);
+  const [featured, { homepage }, testimonials] = await Promise.all([getFeaturedPieces(3), getSiteContent(), getTestimonials()]);
   return (
     <main>
       <section className="relative isolate flex min-h-[calc(100svh-5rem)] items-end overflow-hidden bg-kd-black text-kd-white">
         {/* Phones: photo fills the screen, anchored to the top so the face stays visible. */}
         {/* Tablet/desktop: blurred copy fills the screen; the full portrait sits on the right, uncropped. */}
         <Image
-          src="/brand/dixit-hero.jpg"
+          src={homepage.heroImage}
           alt=""
           fill
           priority
@@ -34,7 +34,7 @@ export default async function Home() {
         />
         <div className="absolute inset-y-0 right-0 -z-20 hidden aspect-[583/904] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] md:block lg:right-[6%]">
           <Image
-            src="/brand/dixit-hero.jpg"
+            src={homepage.heroImage}
             alt="DIXIT editorial look: textured gold jacket styled with black tailoring in a dramatic open landscape"
             fill
             priority
@@ -48,9 +48,9 @@ export default async function Home() {
         <div className="absolute inset-x-0 bottom-0 -z-10 h-[68%] bg-gradient-to-t from-kd-black via-kd-black/85 to-transparent md:hidden" />
         <Container className="grid min-h-[calc(100svh-5rem)] items-end gap-10 pb-16 pt-24 lg:grid-cols-2 lg:pb-24">
           <div className="kd-hero-in max-w-4xl">
-            <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-kd-gold">A Modern Fashion House</p>
-            <h1 className="font-display text-[clamp(3.75rem,9vw,8.5rem)] font-medium leading-[0.78] tracking-[-0.05em]">Style is a <span className="block italic text-kd-gold">statement.</span></h1>
-            <p className="mt-9 max-w-xl text-base leading-8 text-white/85 md:text-lg">Bespoke craft. Ready-to-wear expression. A wardrobe shaped around individuality.</p>
+            <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-kd-gold">{homepage.eyebrow}</p>
+            <h1 className="font-display text-[clamp(3.75rem,9vw,8.5rem)] font-medium leading-[0.78] tracking-[-0.05em]">{homepage.headline} <span className="block italic text-kd-gold">{homepage.headlineAccent}</span></h1>
+            <p className="mt-9 max-w-xl text-base leading-8 text-white/85 md:text-lg">{homepage.intro}</p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Button href="/collections">Explore collections</Button>
               <Button href="/our-story" variant="outline">Discover DIXIT</Button>

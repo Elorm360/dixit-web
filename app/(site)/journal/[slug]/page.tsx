@@ -3,24 +3,25 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { formatPostDate, getPost, posts } from "@/data/journal";
+import { formatPostDate } from "@/data/journal";
+import { getJournalPost, getJournalPosts } from "@/lib/content";
 
 type PostPageProps = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
+// New posts published from the dashboard render on first visit, then stay cached.
+export async function generateStaticParams() {
+  const posts = await getJournalPosts();
   // Next needs at least one param set for a static route; this placeholder 404s.
   return posts.length ? posts.map(({ slug }) => ({ slug })) : [{ slug: "none" }];
 }
 
 export async function generateMetadata({ params }: PostPageProps) {
-  const post = getPost((await params).slug);
+  const post = await getJournalPost((await params).slug);
   return post ? { title: post.title, description: post.excerpt, openGraph: post.image ? { images: [post.image] } : undefined } : {};
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const post = getPost((await params).slug);
+  const post = await getJournalPost((await params).slug);
   if (!post) notFound();
 
   return (

@@ -1,7 +1,7 @@
-import { whatsappLink } from "@/config/site";
+import { whatsappHref } from "@/lib/content";
 
-export function WhatsAppButton() {
-  const href = whatsappLink("Hello DIXIT, I'd like to make an enquiry.");
+export function WhatsAppButton({ number }: { number: string }) {
+  const href = whatsappHref(number, "Hello DIXIT, I'd like to make an enquiry.");
   if (!href) return null;
 
   return (

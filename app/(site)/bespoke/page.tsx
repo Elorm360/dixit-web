@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { formatPrice, pricing } from "@/config/site";
+import { formatPrice } from "@/config/site";
+import { getSiteContent } from "@/lib/content";
 
 export const metadata = {
   title: "Bespoke",
@@ -27,7 +28,8 @@ const faqs = [
   ["What if the fit needs adjusting?", "Fittings are part of the process. The garment is refined until it fits as it should before it is delivered."],
 ];
 
-export default function BespokePage() {
+export default async function BespokePage() {
+  const { pricing } = await getSiteContent();
   return (
     <main>
       <section className="bg-kd-black py-24 text-kd-white md:py-36">

@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { contact, siteConfig, whatsappLink } from "@/config/site";
+import { siteConfig } from "@/config/site";
+import { type ContactDetails, type NavItem, whatsappHref } from "@/lib/content";
 import { Container } from "@/components/ui/container";
 
-export function SiteFooter() {
+export function SiteFooter({ navigation, contact }: { navigation: NavItem[]; contact: ContactDetails }) {
+  const whatsapp = whatsappHref(contact.whatsapp);
   return (
     <footer className="border-t border-white/10 bg-kd-black text-kd-white">
       <Container className="pb-10 pt-4 md:pt-8">
@@ -18,14 +20,14 @@ export function SiteFooter() {
           <div>
             <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/40">Explore</p>
             <nav className="flex flex-col gap-3" aria-label="Footer navigation">
-              {siteConfig.navigation.map((item) => <Link key={item.href} href={item.href} className="text-sm text-white/65 transition-colors hover:text-kd-gold">{item.label}</Link>)}
+              {navigation.map((item) => <Link key={item.href} href={item.href} className="text-sm text-white/65 transition-colors hover:text-kd-gold">{item.label}</Link>)}
             </nav>
           </div>
           <div>
             <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/40">Contact</p>
             <div className="flex flex-col gap-3 text-sm text-white/65">
               <span>{contact.city}</span>
-              {whatsappLink() && <a href={whatsappLink()!} target="_blank" rel="noopener noreferrer" className="hover:text-kd-gold">WhatsApp</a>}
+              {whatsapp && <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="hover:text-kd-gold">WhatsApp</a>}
               {contact.email && <a href={`mailto:${contact.email}`} className="hover:text-kd-gold">{contact.email}</a>}
               {contact.instagram && <a href={`https://instagram.com/${contact.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-kd-gold">Instagram</a>}
               <Link href={siteConfig.consultationHref} className="hover:text-kd-gold">Book a consultation</Link>
