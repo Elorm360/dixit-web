@@ -6,6 +6,10 @@ import { formatPrice } from "@/config/site";
 import { getAllPieces } from "@/lib/pieces";
 import { Reveal } from "@/components/ui/reveal";
 import { testimonials } from "@/data/testimonials";
+import { collectionCategories } from "@/data/collections";
+
+// Shown on the home page until collection photos are added.
+const homeCollections = collectionCategories.filter((c) => ["womenswear", "menswear", "bespoke"].includes(c.slug));
 
 const pillars = [
   ["01", "Bespoke", "Personal pieces shaped around your proportions, preferences, and occasion."],
@@ -40,6 +44,8 @@ export default async function Home() {
         </div>
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+        {/* Phones: the copy sits over the lower half of the portrait, so give it a solid base to read against. */}
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-[68%] bg-gradient-to-t from-kd-black via-kd-black/85 to-transparent md:hidden" />
         <Container className="grid min-h-[calc(100svh-5rem)] items-end gap-10 pb-16 pt-24 lg:grid-cols-2 lg:pb-24">
           <div className="kd-hero-in max-w-4xl">
             <p className="mb-7 text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-kd-gold">A Modern Fashion House</p>
@@ -109,6 +115,29 @@ export default async function Home() {
             <Button href="/collections" className="mt-8">View the collections</Button>
           </div>
         </Container>
+        {featured.length === 0 && (
+          <Container className="mt-16 md:mt-24">
+            <ul className="grid gap-6 sm:grid-cols-3">
+              {homeCollections.map((category, i) => (
+                <li key={category.slug}>
+                  <Reveal delay={i * 120}>
+                    <Link href={`/collections/${category.slug}`} className="group block">
+                      <div className="relative flex aspect-[3/4] flex-col justify-between overflow-hidden border border-white/10 bg-gradient-to-br from-kd-charcoal to-kd-black p-7 transition-colors duration-500 group-hover:border-kd-gold/50">
+                        <span className="text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-white/45">Collection {category.number}</span>
+                        <span className="font-display text-[7rem] leading-none text-kd-gold/15 transition-colors duration-500 group-hover:text-kd-gold/35">{category.number}</span>
+                      </div>
+                      <div className="mt-4 flex items-baseline justify-between gap-4">
+                        <span className="font-display text-2xl transition-colors group-hover:text-kd-gold">{category.name}</span>
+                        <span className="text-lg text-white/50 transition-transform duration-300 group-hover:translate-x-2" aria-hidden="true">→</span>
+                      </div>
+                      <p className="mt-2 max-w-xs text-sm leading-6 text-white/50">{category.description}</p>
+                    </Link>
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        )}
         {featured.length > 0 && (
           <Container className="mt-16 md:mt-24">
             <ul className="grid gap-6 sm:grid-cols-3">
