@@ -18,7 +18,47 @@ export type Enquiry = {
   location: string;
   details: string | null;
   notes: string | null;
+  /** Confirmed consultation time, set by staff. Absent until the booking migration is applied. */
+  consultation_at?: string | null;
 };
+
+export const STUDIO_TIME_ZONE = "Africa/Accra";
+
+/** "Tue 3 Dec 2026, 14:30" in studio time. */
+export function formatDateTime(value: string) {
+  return new Date(value).toLocaleString("en-GB", {
+    timeZone: STUDIO_TIME_ZONE,
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+/** ISO timestamp → value for an <input type="datetime-local">, in studio time. */
+export function toDateTimeLocal(value: string | null | undefined) {
+  if (!value) return "";
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-GB", { timeZone: STUDIO_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+      .formatToParts(new Date(value))
+      .map((p) => [p.type, p.value]),
+  );
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+}
+
+/** <input type="datetime-local"> value (studio time, Accra = UTC+0) → ISO timestamp. */
+export function fromDateTimeLocal(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) return null;
+  const d = new Date(`${value}:00Z`);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
+/** Postgres "undefined column" — the booking migration hasn't been applied yet. */
+export function isMissingColumn(error: { code?: string; message?: string } | null) {
+  return Boolean(error && (error.code === "42703" || error.code === "PGRST204" || /consultation_at/.test(error.message ?? "")));
+}
 
 /**
  * Use at the top of every admin page and server action.

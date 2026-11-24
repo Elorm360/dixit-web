@@ -5,7 +5,7 @@ import { adminButtonPrimary } from "@/components/admin/ui";
 import { ENQUIRY_STATUSES } from "@/lib/enquiry-status";
 import { updateEnquiry } from "../actions";
 
-export function EnquiryForm({ id, status, notes }: { id: string; status: string; notes: string }) {
+export function EnquiryForm({ id, status, notes, consultationAt }: { id: string; status: string; notes: string; consultationAt: string }) {
   const [state, action, pending] = useActionState(updateEnquiry.bind(null, id), null);
 
   return (
@@ -15,6 +15,11 @@ export function EnquiryForm({ id, status, notes }: { id: string; status: string;
         <select name="status" defaultValue={status} className="kd-input">
           {ENQUIRY_STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
+      </label>
+      <label className="block">
+        <span className="kd-label">Confirmed consultation (Accra time)</span>
+        <input name="consultation_at" type="datetime-local" defaultValue={consultationAt} className="kd-input" />
+        <span className="mt-1 block text-xs text-kd-gray">Set once you’ve agreed a time with the client. It appears on the calendar, and the status moves to “Consultation booked”. Clear it to cancel.</span>
       </label>
       <label className="block">
         <span className="kd-label">Internal notes</span>
