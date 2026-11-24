@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { founder } from "@/data/founder";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { getSiteContent } from "@/lib/content";
 import { SectionIntro } from "@/components/ui/section-intro";
 
 export const metadata = {
@@ -17,7 +17,8 @@ const values = [
   ["04", "Expression", "Fashion is a language: cultural, personal, and always evolving."],
 ];
 
-export default function OurStoryPage() {
+export default async function OurStoryPage() {
+  const { founder } = await getSiteContent();
   return (
     <main>
       <section className="bg-kd-cream py-24 text-kd-black md:py-36">

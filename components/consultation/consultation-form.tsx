@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { whatsappLink } from "@/config/site";
+import { whatsappHref } from "@/lib/content";
 
 const serviceOptions = [
   "Bespoke",
@@ -30,7 +30,7 @@ function whatsappSummary(data: Record<string, string>) {
   return lines.filter(Boolean).join("\n");
 }
 
-export function ConsultationForm({ interest = "", minDate }: { interest?: string; minDate: string }) {
+export function ConsultationForm({ interest = "", minDate, whatsappNumber }: { interest?: string; minDate: string; whatsappNumber: string }) {
   const suggestedService = serviceOptions.find((o) => interest.toLowerCase().includes(o.toLowerCase()));
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -64,8 +64,8 @@ export function ConsultationForm({ interest = "", minDate }: { interest?: string
     }
   }
 
-  const successWhatsapp = whatsappLink(whatsappSummary(sent));
-  const errorWhatsapp = whatsappLink("Hello DIXIT, I'd like to make an enquiry.");
+  const successWhatsapp = whatsappHref(whatsappNumber, whatsappSummary(sent));
+  const errorWhatsapp = whatsappHref(whatsappNumber, "Hello DIXIT, I'd like to make an enquiry.");
 
   if (submissionState === "success") {
     return (

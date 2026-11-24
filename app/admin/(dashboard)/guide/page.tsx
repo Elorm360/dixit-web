@@ -7,6 +7,7 @@ export const metadata = { title: "Getting started" };
 
 const firstSteps = [
   { title: "Change your password", body: "Replace the temporary password you were given with your own.", href: "/admin/account", cta: "My account" },
+  { title: "Add your business details", body: "Enter the WhatsApp number, email, Instagram and opening hours. The WhatsApp button appears across the site as soon as the number is saved.", href: "/admin/content#business", cta: "Website content" },
   { title: "Look around the website", body: "Open the site and browse it as a client would — home, collections, bespoke, contact.", href: "/", cta: "View site ↗", external: true },
   { title: "Upload your first collection", body: "Drop in a batch of photos. Each becomes a hidden draft piece you can name, price and publish.", href: "/admin/pieces/bulk", cta: "Bulk upload" },
   { title: "Publish and feature pieces", body: "On Pieces, switch drafts to Live, drag them into order, and star (★) the ones to show on the home page.", href: "/admin/pieces", cta: "Pieces" },

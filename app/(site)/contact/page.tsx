@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { contact, whatsappLink } from "@/config/site";
+import { getSiteContent, whatsappHref } from "@/lib/content";
 
 export const metadata = {
   title: "Contact",
   description: "Get in touch with DIXIT in Accra for bespoke, collection, styling, and fashion enquiries.",
 };
 
-export default function ContactPage() {
-  const whatsapp = whatsappLink("Hello DIXIT, I'd like to make an enquiry.");
+export default async function ContactPage() {
+  const { contact } = await getSiteContent();
+  const whatsapp = whatsappHref(contact.whatsapp, "Hello DIXIT, I'd like to make an enquiry.");
   const channels = [
     whatsapp && { label: "WhatsApp", value: `+${contact.whatsapp}`, href: whatsapp },
     contact.email && { label: "Email", value: contact.email, href: `mailto:${contact.email}` },

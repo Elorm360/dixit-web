@@ -2,11 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { getJournalPosts, getNavigation, getSiteContent } from "@/lib/content";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const [{ contact }, posts] = await Promise.all([getSiteContent(), getJournalPosts()]);
+  const navigation = getNavigation(posts.length > 0);
   return (
     <>
-    <SiteHeader />
+    <SiteHeader navigation={navigation} />
     <main className="bg-kd-black py-32 text-kd-white md:py-44">
       <Container>
         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold">Page not found</p>
@@ -18,7 +21,7 @@ export default function NotFound() {
         </div>
       </Container>
     </main>
-    <SiteFooter />
+    <SiteFooter navigation={navigation} contact={contact} />
     </>
   );
 }

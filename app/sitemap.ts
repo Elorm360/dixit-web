@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { collectionCategories } from "@/data/collections";
-import { posts } from "@/data/journal";
+import { getJournalPosts } from "@/lib/content";
 import { getAllPieces } from "@/lib/pieces";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
+  const posts = await getJournalPosts();
   const paths = [
     "",
     "/collections",

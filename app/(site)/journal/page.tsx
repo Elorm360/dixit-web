@@ -2,14 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { formatPostDate, posts } from "@/data/journal";
+import { formatPostDate } from "@/data/journal";
+import { getJournalPosts } from "@/lib/content";
 
 export const metadata = {
   title: "Journal",
   description: "Notes, perspectives, and stories from the world of DIXIT.",
 };
 
-export default function JournalPage() {
+export default async function JournalPage() {
+  const posts = await getJournalPosts();
   return (
     <main>
       <section className="bg-kd-black py-24 text-kd-white md:py-36">

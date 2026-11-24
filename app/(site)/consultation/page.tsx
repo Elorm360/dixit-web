@@ -1,5 +1,6 @@
 import { ConsultationForm } from "@/components/consultation/consultation-form";
 import { Container } from "@/components/ui/container";
+import { getSiteContent } from "@/lib/content";
 
 export const metadata = {
   title: "Start a Conversation",
@@ -27,7 +28,7 @@ export default async function ConsultationPage({ searchParams }: { searchParams:
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-kd-gold-dark">Your Enquiry</p>
             <p className="mt-6 max-w-sm text-sm leading-7 text-kd-gray">Share a few details so the DIXIT team can understand what you are looking for and guide the next step.</p>
           </aside>
-          <ConsultationForm interest={typeof interest === "string" ? interest.slice(0, 200) : ""} minDate={new Date().toISOString().slice(0, 10)} />
+          <ConsultationForm interest={typeof interest === "string" ? interest.slice(0, 200) : ""} minDate={new Date().toISOString().slice(0, 10)} whatsappNumber={(await getSiteContent()).contact.whatsapp} />
         </Container>
       </section>
     </main>

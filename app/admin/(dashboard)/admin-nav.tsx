@@ -8,6 +8,7 @@ const links = [
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/calendar", label: "Calendar" },
   { href: "/admin/pieces", label: "Pieces" },
+  { href: "/admin/content", label: "Website content" },
   { href: "/admin/team", label: "Team", superAdminOnly: true },
   { href: "/admin/guide", label: "Getting started" },
   { href: "/admin/account", label: "My account" },
@@ -16,7 +17,7 @@ const links = [
 export function AdminNav({ newCount, isSuperAdmin }: { newCount: number; isSuperAdmin: boolean }) {
   const pathname = usePathname();
   return (
-    <nav className="flex gap-1 overflow-x-auto lg:flex-col" aria-label="Dashboard">
+    <nav className="flex gap-1 overflow-x-auto [scrollbar-width:none] lg:flex-col [&::-webkit-scrollbar]:hidden" aria-label="Dashboard">
       {links.filter((l) => !l.superAdminOnly || isSuperAdmin).map((l) => {
         const active = l.href === "/admin" ? pathname === "/admin" : pathname.startsWith(l.href);
         return (
