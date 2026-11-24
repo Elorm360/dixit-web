@@ -46,11 +46,13 @@ Staff sign in at **/admin** to:
 
 ### Setup (once)
 1. Migrations in `supabase/migrations/` are already applied to the production project. For new ones: `npx supabase link` then `npx supabase db push`.
-2. In Supabase → **Authentication → Users**, add a user (email + password) for each staff member.
-3. Grant them dashboard access in the SQL editor:
+2. In Supabase → **Authentication → Users**, add a user (email + temporary password, auto confirm) for each team member.
+3. A **super admin** gives them access in the dashboard under **Team** (role: *Staff* or *Super admin*). They change the temporary password under **My account**.
+   The very first super admin is set in the SQL editor:
    ```sql
-   insert into private.staff_members (user_id, email)
-   select id, email from auth.users where email = 'person@example.com';
+   insert into private.staff_members (user_id, email, role)
+   select id, email, 'super_admin' from auth.users where email = 'person@example.com'
+   on conflict (user_id) do update set role = 'super_admin';
    ```
 4. Make sure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` are set in Vercel.
 
