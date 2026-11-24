@@ -7,6 +7,7 @@ const links = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/calendar", label: "Calendar" },
+  { href: "/admin/insights", label: "Insights" },
   { href: "/admin/pieces", label: "Pieces" },
   { href: "/admin/content", label: "Website content" },
   { href: "/admin/team", label: "Team", superAdminOnly: true },
