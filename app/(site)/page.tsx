@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { formatPrice } from "@/config/site";
-import { getAllPieces } from "@/lib/pieces";
+import { getFeaturedPieces } from "@/lib/pieces";
 import { Reveal } from "@/components/ui/reveal";
 import { testimonials } from "@/data/testimonials";
 import { collectionCategories } from "@/data/collections";
@@ -18,7 +18,7 @@ const pillars = [
 ];
 
 export default async function Home() {
-  const featured = (await getAllPieces()).slice(0, 3);
+  const featured = await getFeaturedPieces(3);
   return (
     <main>
       <section className="relative isolate flex min-h-[calc(100svh-5rem)] items-end overflow-hidden bg-kd-black text-kd-white">

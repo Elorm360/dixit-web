@@ -15,6 +15,8 @@ export type Piece = {
   details: string[];
   price: number | null;
   images: string[];
+  /** Chosen in the dashboard to appear on the home page. */
+  featured?: boolean;
 };
 
 function titleFromSlug(slug: string) {
@@ -64,7 +66,10 @@ type PieceRow = {
   details: string[];
   price: string | number | null;
   images: string[];
+  featured?: boolean;
 };
+
+const PIECE_COLUMNS = "collection,slug,name,description,details,price,images";
 
 /** Published pieces added from the admin dashboard. Cached until a piece is changed. */
 async function getDatabasePieces(): Promise<Piece[]> {
@@ -72,11 +77,17 @@ async function getDatabasePieces(): Promise<Piece[]> {
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return [];
 
+  const request = (columns: string) =>
+    fetch(`${url.replace(/\/$/, "")}/rest/v1/pieces?published=eq.true&select=${columns}&order=sort_order.asc,created_at.desc`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      cache: "force-cache",
+      next: { tags: [PIECES_TAG] },
+    });
+
   try {
-    const res = await fetch(
-      `${url.replace(/\/$/, "")}/rest/v1/pieces?published=eq.true&select=collection,slug,name,description,details,price,images&order=sort_order.asc,created_at.desc`,
-      { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "force-cache", next: { tags: [PIECES_TAG] } },
-    );
+    let res = await request(`${PIECE_COLUMNS},featured`);
+    // Before the "featured" migration is applied, fall back so the site never loses its pieces.
+    if (res.status === 400) res = await request(PIECE_COLUMNS);
     if (!res.ok) return [];
     const rows: PieceRow[] = await res.json();
     return rows
@@ -89,6 +100,7 @@ async function getDatabasePieces(): Promise<Piece[]> {
         details: r.details,
         price: r.price == null ? null : Number(r.price),
         images: r.images.map(storageUrl),
+        featured: r.featured === true,
       }));
   } catch {
     return [];
@@ -103,4 +115,11 @@ export async function getPieces(collection: string): Promise<Piece[]> {
 
 export async function getAllPieces() {
   return (await Promise.all(collectionCategories.map((c) => getPieces(c.slug)))).flat();
+}
+
+/** Pieces for the home page: the ones staff starred, or the first few if none are starred yet. */
+export async function getFeaturedPieces(limit = 6) {
+  const all = await getAllPieces();
+  const starred = all.filter((p) => p.featured);
+  return (starred.length ? starred : all).slice(0, limit);
 }

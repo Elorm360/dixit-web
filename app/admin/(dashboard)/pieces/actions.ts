@@ -82,6 +82,65 @@ export async function deletePiece(id: string) {
   redirect("/admin/pieces?deleted=1");
 }
 
+const UUID = /^[0-9a-f-]{36}$/i;
+
+export async function toggleFeatured(id: string, featured: boolean) {
+  const { supabase } = await requireStaff();
+  if (!UUID.test(id)) return;
+  const { data } = await supabase.from("pieces").select("collection").eq("id", id).maybeSingle();
+  if (!data) return;
+  await supabase.from("pieces").update({ featured, updated_at: new Date().toISOString() }).eq("id", id);
+  refreshSite(data.collection);
+}
+
+/** Saves the order staff dragged pieces into. `ids` is the full list for one collection, in display order. */
+export async function reorderPieces(collection: string, ids: string[]): Promise<{ error?: string }> {
+  const { supabase } = await requireStaff();
+  if (!collectionCategories.some((c) => c.slug === collection)) return { error: "Unknown collection." };
+  if (!Array.isArray(ids) || ids.length > 500 || ids.some((id) => typeof id !== "string" || !UUID.test(id))) return { error: "Invalid order." };
+
+  const results = await Promise.all(
+    ids.map((id, i) => supabase.from("pieces").update({ sort_order: (i + 1) * 10 }).eq("id", id).eq("collection", collection)),
+  );
+  if (results.some((r) => r.error)) return { error: "Could not save the new order. Please refresh and try again." };
+  refreshSite(collection);
+  return {};
+}
+
+export type DraftPiece = { name: string; slug: string; images: string[] };
+
+/** Creates hidden draft pieces from a bulk photo upload. Slugs that clash get a number added. */
+export async function createDraftPieces(collection: string, drafts: DraftPiece[]): Promise<{ error?: string; created?: number }> {
+  const { supabase } = await requireStaff();
+  if (!collectionCategories.some((c) => c.slug === collection)) return { error: "Choose a collection." };
+  if (!Array.isArray(drafts) || drafts.length === 0 || drafts.length > 200) return { error: "Nothing to add." };
+  for (const d of drafts) {
+    if (typeof d?.name !== "string" || !d.name.trim() || d.name.length > 120) return { error: "A piece name is missing or too long." };
+    if (typeof d.slug !== "string" || !SLUG.test(d.slug)) return { error: `“${d.name}” has an invalid web address.` };
+    if (!Array.isArray(d.images) || d.images.length === 0 || d.images.some((p) => typeof p !== "string" || !IMAGE_PATH.test(p) || !p.startsWith(`${collection}/`))) {
+      return { error: `Photos for “${d.name}” did not upload correctly.` };
+    }
+  }
+
+  const { data: existing } = await supabase.from("pieces").select("slug, sort_order").eq("collection", collection);
+  const taken = new Set((existing ?? []).map((r) => r.slug));
+  let order = Math.max(0, ...(existing ?? []).map((r) => r.sort_order)) + 10;
+
+  const rows = drafts.map((d) => {
+    let slug = d.slug;
+    for (let n = 2; taken.has(slug); n++) slug = `${d.slug}-${n}`;
+    taken.add(slug);
+    const row = { collection, name: d.name.trim(), slug, images: d.images, published: false, sort_order: order };
+    order += 10;
+    return row;
+  });
+
+  const { error } = await supabase.from("pieces").insert(rows);
+  if (error) return { error: "Could not create the pieces. Please try again." };
+  refreshSite(collection);
+  return { created: rows.length };
+}
+
 export async function togglePublished(id: string, published: boolean) {
   const { supabase } = await requireStaff();
   const { data } = await supabase.from("pieces").select("collection, images").eq("id", id).maybeSingle();
