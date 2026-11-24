@@ -10,6 +10,8 @@ import { createDraftPieces } from "../actions";
 const MAX_BYTES = 10 * 1024 * 1024;
 const TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 const EXTRA_SUFFIX = /--\d+$/;
+// "01-jacket" — an optional number at the start, used only to control upload order.
+const ORDER_PREFIX = /^\d+[-_ ]+/;
 
 type Group = { key: string; name: string; files: File[] };
 
@@ -18,7 +20,7 @@ function slugify(s: string) {
 }
 
 function titleFromFile(base: string) {
-  return base.replace(/^\d+[-_ ]+/, "").replace(/[-_]+/g, " ").trim().replace(/\b\w/g, (c) => c.toUpperCase()) || "Untitled piece";
+  return base.replace(ORDER_PREFIX, "").replace(/[-_]+/g, " ").trim().replace(/\b\w/g, (c) => c.toUpperCase()) || "Untitled piece";
 }
 
 /** Groups files into pieces: "jacket.jpg" + "jacket--2.jpg" become one piece with two photos. */
@@ -26,8 +28,10 @@ function groupFiles(files: File[]): Group[] {
   const groups = new Map<string, Group>();
   for (const file of [...files].sort((a, b) => a.name.localeCompare(b.name))) {
     const base = file.name.replace(/\.[^.]+$/, "");
-    const key = slugify(base.replace(EXTRA_SUFFIX, "")) || crypto.randomUUID();
-    const group = groups.get(key) ?? { key, name: titleFromFile(base.replace(EXTRA_SUFFIX, "")), files: [] };
+    const stem = base.replace(EXTRA_SUFFIX, "");
+    // "01-jacket.jpg" and "jacket--2.jpg" belong to the same piece.
+    const key = slugify(stem.replace(ORDER_PREFIX, "")) || crypto.randomUUID();
+    const group = groups.get(key) ?? { key, name: titleFromFile(stem), files: [] };
     if (EXTRA_SUFFIX.test(base)) group.files.push(file);
     else group.files.unshift(file);
     groups.set(key, group);
